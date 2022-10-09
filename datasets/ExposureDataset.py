@@ -35,7 +35,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         #    "contempt": float, 
         #    "anger": float, 
         #    "disgust": float, 
-        #    "suprised": float, 
+        #    "surprised": float, 
         #    "fear": float
         #})
 
@@ -89,18 +89,29 @@ class ExposureDataset(torch.utils.data.Dataset):
         #print(f'after video size: {saved_video.shape}: {filename}')
         #save_video(filename + ".avi", np.asarray(saved_video).astype(np.uint8), 50)
 
-        row['video'] = video
-        row["neutral"] = one_hot(torch.tensor(row["neutral"]), num_classes=2)
-        row["happy"] = one_hot(torch.tensor(row["happy"]), num_classes=2)
-        row["sad"] = one_hot(torch.tensor(row["sad"]), num_classes=2)
-        row["contempt"] = one_hot(torch.tensor(row["contempt"]), num_classes=2)
-        row["anger"] = one_hot(torch.tensor(row["anger"]), num_classes=2)
-        row["disgust"] = one_hot(torch.tensor(row["disgust"]), num_classes=2)
-        row["surprised"] = one_hot(torch.tensor(row["surprised"]), num_classes=2)
-        row["fear"] = one_hot(torch.tensor(row["fear"]), num_classes=2)
+        label = [
+            row["neutral"],
+            row["happy"],
+            row["sad"],
+            row["contempt"],
+            row["anger"],
+            row["disgust"],
+            row["surprised"],
+            row["fear"]
+        ]
+
+        #row['video'] = video 
+        #row["neutral"] = one_hot(torch.tensor(row["neutral"]), num_classes=2)
+        #row["happy"] = one_hot(torch.tensor(row["happy"]), num_classes=2)
+        #row["sad"] = one_hot(torch.tensor(row["sad"]), num_classes=2)
+        #row["contempt"] = one_hot(torch.tensor(row["contempt"]), num_classes=2)
+        #row["anger"] = one_hot(torch.tensor(row["anger"]), num_classes=2)
+        #row["disgust"] = one_hot(torch.tensor(row["disgust"]), num_classes=2)
+        #row["surprised"] = one_hot(torch.tensor(row["surprised"]), num_classes=2)
+        #row["fear"] = one_hot(torch.tensor(row["fear"]), num_classes=2)
 
         #print(f"neutral tensor: {row['neutral']}")
-        return row
+        return {'video': video, 'label': label}
             
     def __len__(self):
         return len(self.df)
