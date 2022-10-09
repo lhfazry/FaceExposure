@@ -97,7 +97,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         row["contempt"] = one_hot(torch.tensor(row["contempt"]))
         row["anger"] = one_hot(torch.tensor(row["anger"]))
         row["disgust"] = one_hot(torch.tensor(row["disgust"]))
-        row["suprised"] = one_hot(torch.tensor(row["suprised"]))
+        row["surprised"] = one_hot(torch.tensor(row["surprised"]))
         row["fear"] = one_hot(torch.tensor(row["fear"]))
 
         return row
