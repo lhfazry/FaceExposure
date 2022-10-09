@@ -5,6 +5,7 @@ import collections
 import numpy as np
 import torch
 
+from torch.nn.functional import one_hot
 import torch.utils.data
 import cv2  # pytype: disable=attribute-error
 from vidaug import augmentors as va
@@ -88,7 +89,16 @@ class ExposureDataset(torch.utils.data.Dataset):
         #print(f'after video size: {saved_video.shape}: {filename}')
         #save_video(filename + ".avi", np.asarray(saved_video).astype(np.uint8), 50)
 
+
         row['video'] = video
+        row["neutral"] = one_hot(torch.from_numpy(row["neutral"]))
+        row["happy"] = one_hot(torch.from_numpy(row["happy"]))
+        row["sad"] = one_hot(torch.from_numpy(row["sad"]))
+        row["contempt"] = one_hot(torch.from_numpy(row["contempt"]))
+        row["anger"] = one_hot(torch.from_numpy(row["anger"]))
+        row["disgust"] = one_hot(torch.from_numpy(row["disgust"]))
+        row["suprised"] = one_hot(torch.from_numpy(row["suprised"]))
+        row["fear"] = one_hot(torch.from_numpy(row["fear"]))
 
         return row
             
@@ -133,6 +143,7 @@ def loadvideo(filename: str, frame_dim):
 
         count += 1
 
+    capture.release()
     v = v.transpose((3, 0, 1, 2)) #(C, F, H, W)
 
     assert v.size > 0
