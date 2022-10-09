@@ -163,7 +163,7 @@ class Exposure(pl.LightningModule):
         if stage == 'val':
             key = 'val_loss'
 
-        self.log(key, loss, on_epoch=True, on_step=True)
+        self.log(key, loss, on_epoch=True, on_step=True, prog_bar=True)
             
         return {key: loss}
 
