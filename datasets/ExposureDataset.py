@@ -23,20 +23,20 @@ class ExposureDataset(torch.utils.data.Dataset):
             raise ValueError("Path does not exist: " + root)
 
         df = pd.read_csv(os.path.join(root, "image20_exposure.csv"))
-        df = df[df["split"] == split]
+        self.df = df[df["split"] == split]
 
         print(df.columns)
 
-        self.df = df.astype({
-            "neutral": float, 
-            "happy": float, 
-            "sad": float,
-            "contempt": float, 
-            "anger": float, 
-            "disgust": float, 
-            "suprised": float, 
-            "fear": float
-        })
+        #self.df = df.astype({
+        #    "neutral": float, 
+        #    "happy": float, 
+        #    "sad": float,
+        #    "contempt": float, 
+        #    "anger": float, 
+        #    "disgust": float, 
+        #    "suprised": float, 
+        #    "fear": float
+        #})
 
         self.vid_augs = va.Sequential([
             #va.RandomCrop(size=(240, 180)), # randomly crop video with a size of (240 x 180)
