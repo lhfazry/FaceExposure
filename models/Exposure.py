@@ -147,7 +147,7 @@ class Exposure(pl.LightningModule):
         #print(f"prediction_label shape: {prediction_label.shape}")
 
         loss = self.loss_fn(prediction_label, batch['label'])
-        a = self.confusion_matrix(prediction_label, batch['label'].long())
+        a = self.confusion_matrix((prediction_label > 0.5).long(), batch['label'].long())
         print(a)
 
         #loss = F.cross_entropy(prediction_labels['neutral'].sigmoid(), batch['neutral'])
