@@ -131,7 +131,7 @@ class Exposure(pl.LightningModule):
             'contempt': self.contempt_classifier(x),
             'anger': self.anger_classifier(x),
             'disgust': self.disgust_classifier(x),
-            'suprised': self.surprised_classifier(x),
+            'surprised': self.surprised_classifier(x),
             'fear': self.fear_classifier(x)
         }
 
@@ -187,7 +187,7 @@ class Exposure(pl.LightningModule):
         loss += F.cross_entropy(prediction_labels['contempt'].sigmoid(), batch['contempt'])
         loss += F.cross_entropy(prediction_labels['anger'].sigmoid(), batch['anger'])
         loss += F.cross_entropy(prediction_labels['disgust'].sigmoid(), batch['disgust'])
-        loss += F.cross_entropy(prediction_labels['suprised'].sigmoid(), batch['suprised'])
+        loss += F.cross_entropy(prediction_labels['surprised'].sigmoid(), batch['surprised'])
         loss += F.cross_entropy(prediction_labels['fear'].sigmoid(), batch['fear'])
         
        
