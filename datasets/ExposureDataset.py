@@ -116,7 +116,7 @@ def loadvideo(filename: str, frame_dim):
     frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
     frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    print(f"Frame count: {count}")
+    print(f"Frame count: {frame_count}")
 
     v = np.zeros((frame_count, frame_width, frame_height, 3), np.uint8) # (F, W, H, C)
 
