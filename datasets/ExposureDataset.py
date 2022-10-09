@@ -22,7 +22,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         if not os.path.exists(root):
             raise ValueError("Path does not exist: " + root)
 
-        df = pd.read_csv(os.path.join(root, "image10_exposuredit.csv"))
+        df = pd.read_csv(os.path.join(root, "image20_exposure.csv"))
         df = df[df["split"] == split]
         self.df = df.astype({
             'neutral': 'float', 
@@ -88,17 +88,6 @@ class ExposureDataset(torch.utils.data.Dataset):
             
     def __len__(self):
         return len(self.df)
-
-
-def _defaultdict_of_lists():
-    """Returns a defaultdict of lists.
-
-    This is used to avoid issues with Windows (if this function is anonymous,
-    the Echo dataset cannot be used in a dataloader).
-    """
-
-    return collections.defaultdict(list)
-
 
 def loadvideo(filename: str, frame_dim):
     """Loads a video from a file.
