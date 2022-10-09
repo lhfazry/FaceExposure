@@ -91,14 +91,14 @@ class ExposureDataset(torch.utils.data.Dataset):
 
 
         row['video'] = video
-        row["neutral"] = one_hot(torch.from_numpy(row["neutral"]))
-        row["happy"] = one_hot(torch.from_numpy(row["happy"]))
-        row["sad"] = one_hot(torch.from_numpy(row["sad"]))
-        row["contempt"] = one_hot(torch.from_numpy(row["contempt"]))
-        row["anger"] = one_hot(torch.from_numpy(row["anger"]))
-        row["disgust"] = one_hot(torch.from_numpy(row["disgust"]))
-        row["suprised"] = one_hot(torch.from_numpy(row["suprised"]))
-        row["fear"] = one_hot(torch.from_numpy(row["fear"]))
+        row["neutral"] = one_hot(torch.tensor(row["neutral"]))
+        row["happy"] = one_hot(torch.tensor(row["happy"]))
+        row["sad"] = one_hot(torch.tensor(row["sad"]))
+        row["contempt"] = one_hot(torch.tensor(row["contempt"]))
+        row["anger"] = one_hot(torch.tensor(row["anger"]))
+        row["disgust"] = one_hot(torch.tensor(row["disgust"]))
+        row["suprised"] = one_hot(torch.tensor(row["suprised"]))
+        row["fear"] = one_hot(torch.tensor(row["fear"]))
 
         return row
             
