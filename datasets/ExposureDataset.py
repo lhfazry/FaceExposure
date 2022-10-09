@@ -12,7 +12,7 @@ import random
 import pandas as pd
 
 class ExposureDataset(torch.utils.data.Dataset):
-    def __init__(self, root, split="train", frame_dim=128, augmented=False, max_frames = 250):
+    def __init__(self, root, split="train", frame_dim=128, augmented=False, max_frames = 256):
 
         self.folder = pathlib.Path(root)
         self.augmented = augmented
@@ -73,6 +73,8 @@ class ExposureDataset(torch.utils.data.Dataset):
         elif video.shape[0] < self.max_frames:
             pads = np.zeros((self.max_frames - F, H, W, 3))
             video = np.concatenate(video, pads)
+
+        assert video.shape[0] == self.max_frames
 
         #print(f'before video size: {nvideo.shape}')
         if self.augmented:
