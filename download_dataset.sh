@@ -1,4 +1,4 @@
 #!/bin/bash
 
-gdown 1bdwLj3-H6f-ZyOSy_EyyK4jXHCrCsrtI
+gdown 1WlLl_d7RHqv-2bKIXMLW82lfvPDKkXvK
 unzip dataExposure.zip -d datasets/Exposure
