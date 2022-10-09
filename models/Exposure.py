@@ -41,11 +41,11 @@ class Exposure(pl.LightningModule):
         self.batch_size = batch_size
         self.multi_stage_training = multi_stage_training
         self.loss_fn = nn.BCEWithLogitsLoss()
+        self.confusion_matrix = torchmetrics.ConfusionMatrix(8, multilabel=True)
 
         #self.train_rmse = RMSE()
         #self.train_mae = torchmetrics.MeanAbsoluteError()
         #self.train_r2 = torchmetrics.R2Score()
-        #torchmetrics.ConfusionMatrix(2)()
         #self.val_rmse = torchmetrics.MeanSquaredError(squared=False)
         #self.val_mae = torchmetrics.MeanAbsoluteError()
         #self.val_r2 = torchmetrics.R2Score()
@@ -141,12 +141,14 @@ class Exposure(pl.LightningModule):
         return x
 
     def shared_step(self, batch, stage):
-        print(f"batch shape: {batch['video'].shape}")
-        print(f"label shape: {batch['label'].shape}")
+        #print(f"batch shape: {batch['video'].shape}")
+        #print(f"label shape: {batch['label'].shape}")
         prediction_label = self(batch['video'])
-        print(f"prediction_label shape: {prediction_label.shape}")
+        #print(f"prediction_label shape: {prediction_label.shape}")
 
         loss = self.loss_fn(prediction_label, batch['label'])
+        a = self.confusion_matrix(prediction_label, batch['label'])
+        print(a)
 
         #loss = F.cross_entropy(prediction_labels['neutral'].sigmoid(), batch['neutral'])
         #loss += F.cross_entropy(prediction_labels['happy'].sigmoid(), batch['happy'])
