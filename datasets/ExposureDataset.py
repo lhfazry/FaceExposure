@@ -48,7 +48,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             
     def __getitem__(self, index):
         row = self.df.iloc[index].to_dict()
-        path = os.path.join(self.folder, row['video_name'])
+        path = os.path.join(self.folder, row["video_name"])
 
         # Load video into np.array
         video = loadvideo(path, self.frame_dim).astype(np.float32) / 255.
