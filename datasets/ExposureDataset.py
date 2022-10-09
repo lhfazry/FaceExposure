@@ -69,7 +69,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         video = video[::sampling_rate,:,:,:]
 
         if video.shape[0] > self.max_frames:
-            video = video[:self.max_frames - 1,:,:,:]
+            video = video[:self.max_frames,:,:,:]
         elif video.shape[0] < self.max_frames:
             pads = np.zeros((self.max_frames - F, H, W, 3))
             video = np.concatenate(video, pads)
