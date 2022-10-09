@@ -56,7 +56,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         #key = os.path.splitext(self.fnames[index])[0]
 
         video = np.moveaxis(video, 0, 1) #(F, C, H, W)
-        F, C, H, W = video.shape[0] # number of frame (nof)
+        F, C, H, W = video.shape
         sampling_step = 1
 
         if F > 1024:
