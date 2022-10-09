@@ -90,14 +90,14 @@ class ExposureDataset(torch.utils.data.Dataset):
         #save_video(filename + ".avi", np.asarray(saved_video).astype(np.uint8), 50)
 
         row['video'] = video
-        row["neutral"] = one_hot(torch.tensor(row["neutral"]))
-        row["happy"] = one_hot(torch.tensor(row["happy"]))
-        row["sad"] = one_hot(torch.tensor(row["sad"]))
-        row["contempt"] = one_hot(torch.tensor(row["contempt"]))
-        row["anger"] = one_hot(torch.tensor(row["anger"]))
-        row["disgust"] = one_hot(torch.tensor(row["disgust"]))
-        row["surprised"] = one_hot(torch.tensor(row["surprised"]))
-        row["fear"] = one_hot(torch.tensor(row["fear"]))
+        row["neutral"] = one_hot(torch.tensor(row["neutral"]), num_classes=2)
+        row["happy"] = one_hot(torch.tensor(row["happy"]), num_classes=2)
+        row["sad"] = one_hot(torch.tensor(row["sad"]), num_classes=2)
+        row["contempt"] = one_hot(torch.tensor(row["contempt"]), num_classes=2)
+        row["anger"] = one_hot(torch.tensor(row["anger"]), num_classes=2)
+        row["disgust"] = one_hot(torch.tensor(row["disgust"]), num_classes=2)
+        row["surprised"] = one_hot(torch.tensor(row["surprised"]), num_classes=2)
+        row["fear"] = one_hot(torch.tensor(row["fear"]), num_classes=2)
 
         print(f"neutral tensor: {row['neutral']}")
         return row
