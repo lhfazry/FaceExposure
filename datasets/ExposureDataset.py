@@ -99,7 +99,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         row["surprised"] = one_hot(torch.tensor(row["surprised"]), num_classes=2)
         row["fear"] = one_hot(torch.tensor(row["fear"]), num_classes=2)
 
-        print(f"neutral tensor: {row['neutral']}")
+        #print(f"neutral tensor: {row['neutral']}")
         return row
             
     def __len__(self):
