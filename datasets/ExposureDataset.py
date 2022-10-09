@@ -24,6 +24,9 @@ class ExposureDataset(torch.utils.data.Dataset):
 
         df = pd.read_csv(os.path.join(root, "image20_exposure.csv"))
         df = df[df["split"] == split]
+
+        print(df.columns)
+        
         self.df = df.astype({
             'neutral': 'float', 
             'happy': 'float', 

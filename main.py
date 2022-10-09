@@ -8,7 +8,7 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 parser = argparse.ArgumentParser()
 parser.add_argument("--mode", type=str, default="train", help="Train or test")
 parser.add_argument("--pretrained", type=str, default=None, help="File pretrained swin")
-parser.add_argument("--data_dir", type=str, default="datasets/EchoNet", help="Path ke datasets")
+parser.add_argument("--data_dir", type=str, default="datasets/Exposure", help="Path ke datasets")
 parser.add_argument("--batch_size", type=int, default=8, help="Batch size")
 #parser.add_argument("--embed_dim", type=int, default=128, help="Embed dimension")
 parser.add_argument("--frozen_stages", type=int, default=-1 , help="Frozen stages")
