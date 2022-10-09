@@ -128,6 +128,7 @@ def loadvideo(filename: str, frame_dim):
         frame = cv2.resize(frame, (frame_dim, frame_dim))
         v[count] = frame
 
+    print(f"Frame count: {count}")
     v = v.transpose((3, 0, 1, 2)) #(C, F, H, W)
 
     assert v.size > 0
