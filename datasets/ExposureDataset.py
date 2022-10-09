@@ -119,8 +119,7 @@ def loadvideo(filename: str, frame_dim):
 
     v = np.zeros((frame_count, frame_dim, frame_dim, 3), np.uint8) # (F, W, H, C)
 
-    count = 0
-    while(capture.isOpened()):
+    for count in range(frame_count):
         ret, frame = capture.read()
         
         if not ret:
