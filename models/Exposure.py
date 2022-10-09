@@ -158,8 +158,14 @@ class Exposure(pl.LightningModule):
         #loss += F.cross_entropy(prediction_labels['disgust'].sigmoid(), batch['disgust'])
         #loss += F.cross_entropy(prediction_labels['surprised'].sigmoid(), batch['surprised'])
         #loss += F.cross_entropy(prediction_labels['fear'].sigmoid(), batch['fear'])
-        
-        return {'loss': loss}
+        key = 'loss'
+
+        if stage == 'val':
+            key = 'val_loss'
+
+        self.log(key, loss, on_epoch=True, on_step=True)
+            
+        return {key: loss}
 
     def training_step(self, batch, batch_idx):
         return self.shared_step(batch, 'train')
