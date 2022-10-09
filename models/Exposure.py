@@ -160,6 +160,7 @@ class Exposure(pl.LightningModule):
         return loss
 
     def validation_step(self, batch, batch_idx):
+        print(f"batch shape: {batch['video'].shape}")
         prediction_labels = self(batch['video'])
        
         loss = F.cross_entropy(prediction_labels['neutral'].sigmoid(), batch['neutral'])
