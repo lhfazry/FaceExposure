@@ -89,7 +89,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         #print(f'after video size: {saved_video.shape}: {filename}')
         #save_video(filename + ".avi", np.asarray(saved_video).astype(np.uint8), 50)
 
-        label = [
+        label = np.array([
             row["neutral"],
             row["happy"],
             row["sad"],
@@ -98,7 +98,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             row["disgust"],
             row["surprised"],
             row["fear"]
-        ]
+        ])
 
         #row['video'] = video 
         #row["neutral"] = one_hot(torch.tensor(row["neutral"]), num_classes=2)

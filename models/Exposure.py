@@ -141,8 +141,11 @@ class Exposure(pl.LightningModule):
         return x
 
     def shared_step(self, batch, stage):
-        #print(f"batch shape: {batch['video'].shape}")
+        print(f"batch shape: {batch['video'].shape}")
+        print(f"label shape: {batch['label'].shape}")
         prediction_label = self(batch['video'])
+        print(f"prediction_label shape: {prediction_label.shape}")
+        
         loss = self.loss_fn(prediction_label, batch['label'])
 
         #loss = F.cross_entropy(prediction_labels['neutral'].sigmoid(), batch['neutral'])
