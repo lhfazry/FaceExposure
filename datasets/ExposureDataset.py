@@ -111,19 +111,18 @@ def loadvideo(filename: str, frame_dim):
     if not os.path.exists(filename):
         raise FileNotFoundError(filename)
 
-    capture = cv2.CaptureFromFile(filename)
+    capture = cv2.VideoCapture(filename)
 
     frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
     frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    print(f"Frame count: {frame_count}")
 
     v = np.zeros((frame_count, frame_width, frame_height, 3), np.uint8) # (F, W, H, C)
 
     count = 0
     while(capture.isOpened()):
         ret, frame = capture.read()
-
+        
         if not ret:
             raise ValueError("Failed to load frame #{} of {}.".format(count, filename))
 
