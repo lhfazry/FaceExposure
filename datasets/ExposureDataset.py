@@ -49,7 +49,7 @@ class ExposureDataset(torch.utils.data.Dataset):
     def __getitem__(self, index):
         row = self.df.iloc[index].to_dict()
         path = os.path.join(self.folder, row["video_name"])
-        print(f"Load video from: {path}")
+        #print(f"Load video from: {path}")
 
         # Load video into np.array
         video = loadvideo(path, self.frame_dim).astype(np.float32) / 255.
@@ -114,10 +114,10 @@ def loadvideo(filename: str, frame_dim):
     capture = cv2.VideoCapture(filename)
 
     frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
-    frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
-    frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    #frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+    #frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-    v = np.zeros((frame_count, frame_width, frame_height, 3), np.uint8) # (F, W, H, C)
+    v = np.zeros((frame_count, frame_dim, frame_dim, 3), np.uint8) # (F, W, H, C)
 
     count = 0
     while(capture.isOpened()):
