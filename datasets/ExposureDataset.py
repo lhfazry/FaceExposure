@@ -89,7 +89,6 @@ class ExposureDataset(torch.utils.data.Dataset):
         #print(f'after video size: {saved_video.shape}: {filename}')
         #save_video(filename + ".avi", np.asarray(saved_video).astype(np.uint8), 50)
 
-
         row['video'] = video
         row["neutral"] = one_hot(torch.tensor(row["neutral"]))
         row["happy"] = one_hot(torch.tensor(row["happy"]))
@@ -100,6 +99,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         row["surprised"] = one_hot(torch.tensor(row["surprised"]))
         row["fear"] = one_hot(torch.tensor(row["fear"]))
 
+        print(f"neutral tensor: {row['neutral']}")
         return row
             
     def __len__(self):
