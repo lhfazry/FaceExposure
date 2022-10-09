@@ -1,0 +1,7 @@
+pytorch_lightning
+timm
+einops
+vidaug
+scikit_image
+scikit-learn
+pandas
