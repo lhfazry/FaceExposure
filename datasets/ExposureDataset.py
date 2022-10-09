@@ -26,16 +26,16 @@ class ExposureDataset(torch.utils.data.Dataset):
         df = df[df["split"] == split]
 
         print(df.columns)
-        
+
         self.df = df.astype({
-            'neutral': 'float', 
-            'happy': 'float', 
-            'sad': 'float',
-            'contempt': 'float', 
-            'anger': 'float', 
-            'disgust': 'float', 
-            'suprised': 'float', 
-            'fear': 'float'
+            'neutral': float, 
+            'happy': float, 
+            'sad': float,
+            'contempt': float, 
+            'anger': float, 
+            'disgust': float, 
+            'suprised': float, 
+            'fear': float
         })
 
         self.vid_augs = va.Sequential([
