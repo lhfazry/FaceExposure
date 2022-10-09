@@ -98,7 +98,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             row["disgust"],
             row["surprised"],
             row["fear"]
-        ])
+        ]).astype(np.float32)
 
         #row['video'] = video 
         #row["neutral"] = one_hot(torch.tensor(row["neutral"]), num_classes=2)
