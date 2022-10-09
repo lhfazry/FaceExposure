@@ -116,7 +116,7 @@ class Exposure(pl.LightningModule):
     def forward_head(self, x):
         # input ==> n c d h w
         x = rearrange(x, 'n c d h w -> n d c h w')
-        x = x.flatten(-2).mean(3) # n d c
+        x = x.flatten(-2).mean(3).mean(1) # n d c
         
         x = self.classifier(x) # n 8
 
@@ -145,7 +145,7 @@ class Exposure(pl.LightningModule):
         print(f"label shape: {batch['label'].shape}")
         prediction_label = self(batch['video'])
         print(f"prediction_label shape: {prediction_label.shape}")
-        
+
         loss = self.loss_fn(prediction_label, batch['label'])
 
         #loss = F.cross_entropy(prediction_labels['neutral'].sigmoid(), batch['neutral'])
