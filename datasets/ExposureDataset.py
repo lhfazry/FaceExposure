@@ -25,7 +25,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         df = pd.read_csv(os.path.join(root, "image20_exposure.csv"))
         self.df = df[df["split"] == split]
 
-        print(df.columns)
+        #print(df.columns)
 
         #self.df = df.astype({
         #    "neutral": float, 
@@ -57,16 +57,16 @@ class ExposureDataset(torch.utils.data.Dataset):
 
         video = np.moveaxis(video, 0, 1) #(F, C, H, W)
         F, C, H, W = video.shape
-        sampling_step = 1
+        sampling_rate = 1
 
         if F > 1024:
-            sampling_step = 4
+            sampling_rate = 4
         elif F > 768:
-            sampling_step = 3
+            sampling_rate = 3
         elif F > 512:
-            sampling_step = 2
+            sampling_rate = 2
 
-        video = video[::sampling_step,:,:,:]
+        video = video[::sampling_rate,:,:,:]
 
         if video.shape[0] > self.max_frames:
             video = video[:self.max_frames - 1,:,:,:]
