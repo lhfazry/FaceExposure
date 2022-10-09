@@ -1,4 +1,4 @@
-pytorch_lightning:1.5.8
+pytorch_lightning==1.5.8
 timm
 einops
 vidaug
