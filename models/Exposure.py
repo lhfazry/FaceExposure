@@ -96,7 +96,7 @@ class Exposure(pl.LightningModule):
         self.contempt_classifier = nn.Sequential(nn.Dropout(p=0.2), nn.Linear(in_features=2*embed_dim, out_features=2))
         self.anger_classifier = nn.Sequential(nn.Dropout(p=0.2), nn.Linear(in_features=2*embed_dim, out_features=2))
         self.disgust_classifier = nn.Sequential(nn.Dropout(p=0.2), nn.Linear(in_features=2*embed_dim, out_features=2))
-        self.supprised_classifier = nn.Sequential(nn.Dropout(p=0.2), nn.Linear(in_features=2*embed_dim, out_features=2))
+        self.surprised_classifier = nn.Sequential(nn.Dropout(p=0.2), nn.Linear(in_features=2*embed_dim, out_features=2))
         self.fear_classifier = nn.Sequential(nn.Dropout(p=0.2), nn.Linear(in_features=2*embed_dim, out_features=2))
 
         #self.dropout = nn.Dropout(p=0.5)
@@ -131,7 +131,7 @@ class Exposure(pl.LightningModule):
             'contempt': self.contempt_classifier(x),
             'anger': self.anger_classifier(x),
             'disgust': self.disgust_classifier(x),
-            'suprised': self.supprised_classifier(x),
+            'suprised': self.surprised_classifier(x),
             'fear': self.fear_classifier(x)
         }
 
@@ -152,7 +152,7 @@ class Exposure(pl.LightningModule):
         loss += F.cross_entropy(prediction_labels['contempt'].sigmoid(), batch['contempt'])
         loss += F.cross_entropy(prediction_labels['anger'].sigmoid(), batch['anger'])
         loss += F.cross_entropy(prediction_labels['disgust'].sigmoid(), batch['disgust'])
-        loss += F.cross_entropy(prediction_labels['suprised'].sigmoid(), batch['suprised'])
+        loss += F.cross_entropy(prediction_labels['surprised'].sigmoid(), batch['surprised'])
         loss += F.cross_entropy(prediction_labels['fear'].sigmoid(), batch['fear'])
         
        
@@ -172,7 +172,7 @@ class Exposure(pl.LightningModule):
         loss += F.cross_entropy(prediction_labels['contempt'].sigmoid(), batch['contempt'])
         loss += F.cross_entropy(prediction_labels['anger'].sigmoid(), batch['anger'])
         loss += F.cross_entropy(prediction_labels['disgust'].sigmoid(), batch['disgust'])
-        loss += F.cross_entropy(prediction_labels['suprised'].sigmoid(), batch['suprised'])
+        loss += F.cross_entropy(prediction_labels['surprised'].sigmoid(), batch['surprised'])
         loss += F.cross_entropy(prediction_labels['fear'].sigmoid(), batch['fear'])
         
        
