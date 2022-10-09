@@ -120,14 +120,18 @@ def loadvideo(filename: str, frame_dim):
 
     v = np.zeros((frame_count, frame_width, frame_height, 3), np.uint8) # (F, W, H, C)
 
-    for count in range(frame_count):
+    count = 0
+    while(capture.isOpened()):
         ret, frame = capture.read()
+        
         if not ret:
             raise ValueError("Failed to load frame #{} of {}.".format(count, filename))
 
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame = cv2.resize(frame, (frame_dim, frame_dim))
         v[count] = frame
+
+        count += 1
 
     v = v.transpose((3, 0, 1, 2)) #(C, F, H, W)
 
