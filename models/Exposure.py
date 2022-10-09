@@ -45,14 +45,14 @@ class Exposure(pl.LightningModule):
         #self.train_mae = torchmetrics.MeanAbsoluteError()
         #self.train_r2 = torchmetrics.R2Score()
 
-        self.val_rmse = torchmetrics.MeanSquaredError(squared=False)
-        self.val_mae = torchmetrics.MeanAbsoluteError()
-        self.val_r2 = torchmetrics.R2Score()
+        #self.val_rmse = torchmetrics.MeanSquaredError(squared=False)
+        #self.val_mae = torchmetrics.MeanAbsoluteError()
+        #self.val_r2 = torchmetrics.R2Score()
 
-        self.test_rmse = torchmetrics.MeanSquaredError(squared=False)
-        self.test_mse = torchmetrics.MeanSquaredError()
-        self.test_mae = torchmetrics.MeanAbsoluteError()
-        self.test_r2 = torchmetrics.R2Score()
+        #self.test_rmse = torchmetrics.MeanSquaredError(squared=False)
+        #self.test_mse = torchmetrics.MeanSquaredError()
+        #self.test_mae = torchmetrics.MeanAbsoluteError()
+        #self.test_r2 = torchmetrics.R2Score()
 
         self.swin_transformer = SwinTransformer3D(
             pretrained=pretrained,
@@ -73,16 +73,6 @@ class Exposure(pl.LightningModule):
             patch_norm=patch_norm,
             frozen_stages=frozen_stages,
             use_checkpoint=use_checkpoint
-        )
-        
-        self.extremas = nn.Sequential(
-            nn.Linear(in_features=8*embed_dim, out_features=4*embed_dim, bias=True),
-            nn.LayerNorm(4*embed_dim),
-            nn.LeakyReLU(negative_slope=0.05, inplace=True),
-            nn.Linear(in_features=4*embed_dim, out_features=2*embed_dim, bias=True),
-            nn.LayerNorm(2*embed_dim),
-            nn.LeakyReLU(negative_slope=0.05, inplace=True),
-            nn.Linear(in_features=2*embed_dim, out_features=1, bias=True)
         )
         
         self.feature_processor = nn.Sequential(
