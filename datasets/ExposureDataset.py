@@ -46,7 +46,6 @@ class ExposureDataset(torch.utils.data.Dataset):
             va.HorizontalFlip(), # horizontally flip the video with 50% probability
             va.VerticalFlip(),
             va.GaussianBlur(random.random())
-            va.
         ])
             
     def __getitem__(self, index):
