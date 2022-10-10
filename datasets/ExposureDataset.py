@@ -11,6 +11,7 @@ import cv2  # pytype: disable=attribute-error
 from vidaug import augmentors as va
 import random
 import pandas as pd
+from PIL import Image
 
 class ExposureDataset(torch.utils.data.Dataset):
     def __init__(self, root, split="train", frame_dim=128, augmented=False, max_frames = 256):
@@ -45,6 +46,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             va.HorizontalFlip(), # horizontally flip the video with 50% probability
             va.VerticalFlip(),
             va.GaussianBlur(random.random())
+            va.
         ])
             
     def __getitem__(self, index):
@@ -169,3 +171,22 @@ def save_video(name, video, fps):
         data.write(v)
 
     data.release()
+
+def center_crop_arr(pil_image, image_size):
+    # We are not on a new enough PIL to support the `reducing_gap`
+    # argument, which uses BOX downsampling at powers of two first.
+    # Thus, we do it by hand to improve downsample quality.
+    while min(*pil_image.size) >= 2 * image_size:
+        pil_image = pil_image.resize(
+            tuple(x // 2 for x in pil_image.size), resample=Image.BOX
+        )
+
+    scale = image_size / min(*pil_image.size)
+    pil_image = pil_image.resize(
+        tuple(round(x * scale) for x in pil_image.size), resample=Image.BICUBIC
+    )
+
+    arr = np.array(pil_image)
+    crop_y = (arr.shape[0] - image_size) // 2
+    crop_x = (arr.shape[1] - image_size) // 2
+    return arr[crop_y : crop_y + image_size, crop_x : crop_x + image_size]
