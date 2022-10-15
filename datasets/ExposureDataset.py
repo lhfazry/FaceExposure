@@ -1,3 +1,4 @@
+from math import ceil
 import os
 import pathlib
 import collections
@@ -14,7 +15,7 @@ import pandas as pd
 from PIL import Image
 
 class ExposureDataset(torch.utils.data.Dataset):
-    def __init__(self, root, split="train", frame_dim=128, augmented=False, max_frames = 256):
+    def __init__(self, root, split="train", frame_dim=128, augmented=False, max_frames = 512):
 
         self.folder = pathlib.Path(root)
         self.augmented = augmented
@@ -24,7 +25,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         if not os.path.exists(root):
             raise ValueError("Path does not exist: " + root)
 
-        df = pd.read_csv(os.path.join(root, "image20_exposure.csv"))
+        df = pd.read_csv(os.path.join(root, "video_exposure.csv"))
         self.df = df[df["split"] == split]
 
         #print(df.columns)
@@ -61,12 +62,14 @@ class ExposureDataset(torch.utils.data.Dataset):
         F, C, H, W = video.shape
         sampling_rate = 1
 
-        if F > 1024:
-            sampling_rate = 4
-        elif F > 768:
-            sampling_rate = 3
-        elif F > 512:
-            sampling_rate = 2
+        #if F > 1024:
+        #    sampling_rate = 3
+        #elif F > 768:
+        #    sampling_rate = 2
+        #elif F > 512:
+        #    sampling_rate = 1
+
+        sampling_rate = round(F / self.max_frames)
 
         video = video[::sampling_rate,:,:,:]
 
