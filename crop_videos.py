@@ -88,7 +88,7 @@ def crop_videos(input_dir, output_dir, dim):
         for i in range(frames.shape[0]):
             face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), 
                 target_size = dim, 
-                detector_backend = 'retinaface',
+                detector_backend = 'ssd',
                 enforce_detection = False
             )
 
