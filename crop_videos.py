@@ -105,7 +105,11 @@ if __name__ == '__main__':
     input_dir = params.input_dir
     output_dir = params.output_dir
     dim = params.dim
-    logging.basicConfig(level = logging.INFO)
+    #logging.basicConfig(level = logging.INFO)
+    logging.basicConfig(
+        format='%(asctime)s %(levelname)-8s %(message)s',
+        level=logging.INFO,
+        datefmt='%Y-%m-%d %H:%M:%S')
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
