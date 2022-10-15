@@ -1,3 +1,4 @@
+#!/opt/conda/bin/python
 import cv2
 import os
 import numpy as np
@@ -98,5 +99,5 @@ if __name__ == '__main__':
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-        
+
     crop_videos(input_dir, output_dir, (dim, dim))
