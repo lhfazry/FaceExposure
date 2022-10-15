@@ -88,11 +88,13 @@ def crop_videos(input_dir, output_dir, detector, dim):
 
         for i in range(frames.shape[0]):
             try:
-                face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), 
+                face, region = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), 
                     target_size = dim, 
-                    detector_backend = detector
+                    detector_backend = detector,
+                    return_region = True
                 )
 
+                logging.info(f"Region: {region}")
                 faces.append((face * 255).astype(np.uint8))
             except:
                 logging.info(f"No face detected on frame: {i}. Skipping")
