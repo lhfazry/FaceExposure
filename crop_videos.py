@@ -53,7 +53,7 @@ def load_video(filename: str):
 
         count += 1
 
-    capture.release()
+    #capture.release()
     #v = v.transpose((3, 0, 1, 2)) #(C, F, H, W)
 
     assert v.size > 0
@@ -67,7 +67,7 @@ def save_video(name, video, fps):
     for v in video:
         data.write(v.astype(np.uint8))
 
-    data.release()
+    #data.release()
 
 def crop_videos(input_dir, output_dir, dim):
     videos = glob(os.path.join(input_dir, '*.mp4'))
