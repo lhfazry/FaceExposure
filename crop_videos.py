@@ -60,7 +60,7 @@ def load_video(filename: str):
     return fps, v
 
 def save_video(name, video, fps):
-    fourcc = cv2.VideoWriter_fourcc(*'MP4V')
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     data = cv2.VideoWriter(name, fourcc, float(fps), (video.shape[1], video.shape[2]))
 
     for v in video:
@@ -73,7 +73,13 @@ def crop_videos(input_dir, output_dir, dim):
 
     for video in videos:
         filename = Path(video).name
+        out_filename = os.path.join(output_dir, filename)
         print(f"Processing: {filename}")
+
+        if os.path.exists(out_filename):
+            print(f"File {filename} already cropped. Skipping")
+            break
+
         fps, frames = load_video(video)
         faces = []
 
@@ -86,7 +92,6 @@ def crop_videos(input_dir, output_dir, dim):
             faces.append(face)
 
         cropped = np.stack(faces, axis=0)
-        out_filename = os.path.join(output_dir, filename)
         print(f"Finished. Cropped shape: {cropped.shape}")
         save_video(out_filename, np.stack(faces, axis=0), fps)
         print(f"Saved into: {out_filename}")
