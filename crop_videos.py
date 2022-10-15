@@ -94,8 +94,7 @@ def crop_videos(input_dir, output_dir, dim):
 
                 faces.append(face)
             except:
-                logging.info(f"No face detected. Skipping")
-
+                logging.info(f"No face detected on frame: {i}. Skipping")
 
         cropped = np.stack(faces, axis=0)
         logging.info(f"Finished. Cropped shape: {cropped.shape}")
