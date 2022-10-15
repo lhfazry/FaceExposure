@@ -65,7 +65,7 @@ def save_video(name, video, fps):
     data = cv2.VideoWriter(name, fourcc, float(fps), (video.shape[1], video.shape[2]))
 
     for v in video:
-        data.write(v.astype(np.uint8))
+        data.write(v)
 
     #data.release()
 
@@ -92,7 +92,7 @@ def crop_videos(input_dir, output_dir, dim):
                     detector_backend = 'retinaface'
                 )
 
-                faces.append(face)
+                faces.append((face * 255).astype(np.uint8))
             except:
                 logging.info(f"No face detected on frame: {i}. Skipping")
 
