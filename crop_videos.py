@@ -86,13 +86,16 @@ def crop_videos(input_dir, output_dir, dim):
         faces = []
 
         for i in range(frames.shape[0]):
-            face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), 
-                target_size = dim, 
-                detector_backend = 'retinaface',
-                enforce_detection = False
-            )
+            try:
+                face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), 
+                    target_size = dim, 
+                    detector_backend = 'retinaface'
+                )
 
-            faces.append(face)
+                faces.append(face)
+            except:
+                logging.info(f"No face detected. Skipping")
+
 
         cropped = np.stack(faces, axis=0)
         logging.info(f"Finished. Cropped shape: {cropped.shape}")

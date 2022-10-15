@@ -155,7 +155,7 @@ def loadvideo(filename: str, frame_dim):
 
         count += 1
 
-    capture.release()
+    # capture.release()
     v = v.transpose((3, 0, 1, 2)) #(C, F, H, W)
 
     assert v.size > 0
