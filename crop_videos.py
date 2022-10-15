@@ -74,13 +74,14 @@ def crop_videos(input_dir, output_dir, dim):
     for video in videos:
         filename = Path(video).name
         out_filename = os.path.join(output_dir, filename)
-        print(f"Processing: {filename}")
 
         if os.path.exists(out_filename):
             print(f"File {filename} already cropped. Skipping")
             continue
 
         fps, frames = load_video(video)
+        print(f"Processing: {filename}, shape: {frames.shape}")
+
         faces = []
 
         for i in range(frames.shape[0]):
