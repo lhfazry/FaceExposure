@@ -9,7 +9,7 @@ from glob import glob
 parser = argparse.ArgumentParser()
 parser.add_argument("--input_dir", type=str, default=None, help="Input directory")
 parser.add_argument("--output_dir", type=str, default=None, help="Output directory")
-parser.add_argument("--dim", type=int, default=None, help="Spatial dimension")
+parser.add_argument("--dim", type=int, default=128, help="Spatial dimension")
 
 params = parser.parse_args()
 
@@ -96,4 +96,7 @@ if __name__ == '__main__':
     output_dir = params.output_dir
     dim = params.dim
 
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+        
     crop_videos(input_dir, output_dir, (dim, dim))
