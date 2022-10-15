@@ -70,6 +70,37 @@ def save_video(name, video, fps):
 
     #data.release()
 
+def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
+    # initialize the dimensions of the image to be resized and
+    # grab the image size
+    dim = None
+    (h, w) = image.shape[:2]
+
+    # if both the width and height are None, then return the
+    # original image
+    if width is None and height is None:
+        return image
+
+    # check to see if the width is None
+    if width is None:
+        # calculate the ratio of the height and construct the
+        # dimensions
+        r = height / float(h)
+        dim = (int(w * r), height)
+
+    # otherwise, the height is None
+    else:
+        # calculate the ratio of the width and construct the
+        # dimensions
+        r = width / float(w)
+        dim = (width, int(h * r))
+
+    # resize the image
+    resized = cv2.resize(image, dim, interpolation = inter)
+
+    # return the resized image
+    return resized
+
 def crop_videos(input_dir, output_dir, detector, dim):
     videos = glob(os.path.join(input_dir, '*.mp4'))
 
@@ -88,13 +119,46 @@ def crop_videos(input_dir, output_dir, detector, dim):
 
         for i in range(frames.shape[0]):
             try:
-                face, region = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), 
+                face = DeepFace.detectFace(img_path = image_resize(frames[i,:,:,:].squeeze(), height=256), 
                     target_size = dim, 
-                    detector_backend = detector,
-                    return_region = True
+                    detector_backend = detector
                 )
 
-                logging.info(f"Region: {region}")
+                faces.append((face * 255).astype(np.uint8))
+            except:
+                logging.info(f"No face detected on frame: {i}. Skipping")
+
+        cropped = np.stack(faces, axis=0)
+        logging.info(f"Finished. Cropped shape: {cropped.shape}")
+        save_video(out_filename, np.stack(faces, axis=0), fps)
+        logging.info(f"Saved into: {out_filename}")
+
+def crop_videos2(input_dir, output_dir, dim):
+    face_cascade = cv2.CascadeClassifier('face_detection/haarcascade_frontalface_default.xml')
+    videos = glob(os.path.join(input_dir, '*.mp4'))
+
+    for video in videos:
+        filename = Path(video).name
+        out_filename = os.path.join(output_dir, filename)
+
+        if os.path.exists(out_filename):
+            logging.info(f"File {filename} already cropped. Skipping")
+            continue
+
+        fps, frames = load_video(video)
+        logging.info(f"Processing: {filename}, shape: {frames.shape}")
+
+        faces = []
+
+        for i in range(frames.shape[0]):
+            gray = cv2.cvtColor(frames[i,:,:,:].squeeze(), cv2.COLOR_BGR2GRAY)
+
+            try:
+                face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), 
+                    target_size = dim, 
+                    detector_backend = detector
+                )
+
                 faces.append((face * 255).astype(np.uint8))
             except:
                 logging.info(f"No face detected on frame: {i}. Skipping")
@@ -109,7 +173,7 @@ if __name__ == '__main__':
     output_dir = params.output_dir
     dim = params.dim
     detector = params.detector
-    #logging.basicConfig(level = logging.INFO)
+
     logging.basicConfig(
         format='%(asctime)s %(levelname)-8s %(message)s',
         level=logging.INFO,
@@ -118,4 +182,4 @@ if __name__ == '__main__':
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    crop_videos(input_dir, output_dir, detector, (dim, dim))
+    crop_videos(input_dir, output_dir, (dim, dim))
