@@ -78,7 +78,7 @@ def crop_videos(input_dir, output_dir, dim):
 
         if os.path.exists(out_filename):
             print(f"File {filename} already cropped. Skipping")
-            break
+            continue
 
         fps, frames = load_video(video)
         faces = []
