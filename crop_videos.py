@@ -10,6 +10,7 @@ from glob import glob
 parser = argparse.ArgumentParser()
 parser.add_argument("--input_dir", type=str, default=None, help="Input directory")
 parser.add_argument("--output_dir", type=str, default=None, help="Output directory")
+parser.add_argument("--detector", type=str, default='ssd', help="Backend detector")
 parser.add_argument("--dim", type=int, default=128, help="Spatial dimension")
 
 params = parser.parse_args()
@@ -69,7 +70,7 @@ def save_video(name, video, fps):
 
     #data.release()
 
-def crop_videos(input_dir, output_dir, dim):
+def crop_videos(input_dir, output_dir, detector, dim):
     videos = glob(os.path.join(input_dir, '*.mp4'))
 
     for video in videos:
@@ -89,7 +90,7 @@ def crop_videos(input_dir, output_dir, dim):
             try:
                 face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), 
                     target_size = dim, 
-                    detector_backend = 'retinaface'
+                    detector_backend = detector
                 )
 
                 faces.append((face * 255).astype(np.uint8))
@@ -105,6 +106,7 @@ if __name__ == '__main__':
     input_dir = params.input_dir
     output_dir = params.output_dir
     dim = params.dim
+    detector = params.detector
     #logging.basicConfig(level = logging.INFO)
     logging.basicConfig(
         format='%(asctime)s %(levelname)-8s %(message)s',
@@ -114,4 +116,4 @@ if __name__ == '__main__':
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    crop_videos(input_dir, output_dir, (dim, dim))
+    crop_videos(input_dir, output_dir, detector, (dim, dim))
