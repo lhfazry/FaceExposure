@@ -2,6 +2,7 @@ import cv2
 import os
 import numpy as np
 import argparse
+import logging
 from pathlib import Path
 from deepface import DeepFace
 from glob import glob
@@ -76,11 +77,11 @@ def crop_videos(input_dir, output_dir, dim):
         out_filename = os.path.join(output_dir, filename)
 
         if os.path.exists(out_filename):
-            print(f"File {filename} already cropped. Skipping")
+            logging.info(f"File {filename} already cropped. Skipping")
             continue
 
         fps, frames = load_video(video)
-        print(f"Processing: {filename}, shape: {frames.shape}")
+        logging.info(f"Processing: {filename}, shape: {frames.shape}")
 
         faces = []
 
@@ -94,14 +95,15 @@ def crop_videos(input_dir, output_dir, dim):
             faces.append(face)
 
         cropped = np.stack(faces, axis=0)
-        print(f"Finished. Cropped shape: {cropped.shape}")
+        logging.info(f"Finished. Cropped shape: {cropped.shape}")
         save_video(out_filename, np.stack(faces, axis=0), fps)
-        print(f"Saved into: {out_filename}")
+        logging.info(f"Saved into: {out_filename}")
 
 if __name__ == '__main__':
     input_dir = params.input_dir
     output_dir = params.output_dir
     dim = params.dim
+    logging.basicConfig(level = logging.INFO)
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
