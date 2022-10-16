@@ -32,6 +32,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         df = df[df["split"] == split]
 
         print(f"CSV file: {csv_file}")
+        print(f"df len: {len(df)}")
         valid_rows = []
 
         for index, row in df.iterrows():
