@@ -15,12 +15,14 @@ import pandas as pd
 from PIL import Image
 
 class ExposureDataset(torch.utils.data.Dataset):
-    def __init__(self, root, split="train", frame_dim=128, augmented=False, max_frames = 512):
+    def __init__(self, root, split="train", frame_dim=128, augmented=False, 
+        max_frames = 512, sampling_strategy="truncate"):
 
         self.folder = pathlib.Path(root)
         self.augmented = augmented
         self.max_frames = max_frames
         self.frame_dim = frame_dim
+        self.sampling_strategy = sampling_strategy
 
         if not os.path.exists(root):
             raise ValueError("Path does not exist: " + root)
@@ -71,7 +73,11 @@ class ExposureDataset(torch.utils.data.Dataset):
 
         #sampling_rate = round(F / self.max_frames)
 
-        video = video[:self.max_frames,:,:,:]
+        if self.sampling_strategy == "truncate":
+            video = video[:self.max_frames,:,:,:]
+        elif self.sampling_strategy == "down-sample":
+            sampling_rate = round(F / self.max_frames)
+            video = video[::sampling_rate,:,:,:]
 
         if video.shape[0] > self.max_frames:
             video = video[:self.max_frames,:,:,:]
