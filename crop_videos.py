@@ -179,8 +179,9 @@ def crop_videos2(input_dir, output_dir, dim):
                 x, y, w, h = detected_faces[0]
                 cropped_frame = frame[y:y+h, x:x+w]
 
-                logging.info(f"Cropped frame shape: {cropped_frame.shape}")
+                #logging.info(f"Cropped frame shape: {cropped_frame.shape}")
                 cropped_frame = image_resize2(cropped_frame, dim)
+                faces.append(cropped_frame)
             else:
                 logging.info(f"No face detected on frame {i}")
 
