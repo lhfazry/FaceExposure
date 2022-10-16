@@ -49,7 +49,7 @@ def calc_frame_stat(dir):
         number_of_frames.append(frame_count)
 
     df = pd.DataFrame(number_of_frames)
-    df.describe()
+    logging.info(df.describe())
 
 if __name__ == '__main__':
     video_dir = params.video_dir
