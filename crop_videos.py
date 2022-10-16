@@ -121,7 +121,8 @@ def crop_videos(input_dir, output_dir, detector, dim):
             try:
                 face = DeepFace.detectFace(img_path = image_resize(frames[i,:,:,:].squeeze(), height=256), 
                     target_size = dim, 
-                    detector_backend = detector
+                    detector_backend = detector,
+                    align = False
                 )
 
                 faces.append((face * 255).astype(np.uint8))
@@ -157,7 +158,7 @@ def crop_videos2(input_dir, output_dir, dim):
                 face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), 
                     target_size = dim, 
                     detector_backend = detector,
-                    align = False
+                    #align = False
                 )
 
                 faces.append((face * 255).astype(np.uint8))
