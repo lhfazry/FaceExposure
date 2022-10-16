@@ -173,8 +173,9 @@ def crop_videos2(input_dir, output_dir, dim):
         for i in range(frames.shape[0]):
             gray = cv2.cvtColor(frames[i,:,:,:].squeeze(), cv2.COLOR_BGR2GRAY)
             # x, y, w, h
-            (x, y, w, h)  = face_cascade.detectMultiScale(gray, 1.3, 5)
-            cropped = frames[y:y+h, x:x+w]
+            face  = face_cascade.detectMultiScale(gray, 1.3, 5)
+            x, y, w, h = face
+            cropped = frames[y+h, x:x+w]
             cropped = image_resize2(cropped, dim)
 
         if len(faces) > 0:
