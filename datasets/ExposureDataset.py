@@ -87,7 +87,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             # (F, C, H, W)
             vid = video.transpose((0, 2, 3, 1)) # (F, H, W, C) 
             vid = np.asarray(self.vid_augs(vid)) # (F, H, W, C)
-            vid = vid.transpose((0, 3, 1, 2)) # (F, C, H, W)
+            video = vid.transpose((0, 3, 1, 2)) # (F, C, H, W)
         
         #saved_video = nvideo.transpose((0, 2, 3, 1))
         #print(f'after video size: {saved_video.shape}: {filename}')
