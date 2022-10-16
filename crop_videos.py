@@ -101,7 +101,26 @@ def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
     # return the resized image
     return resized
 
-def crop_videos(input_dir, output_dir, detector, dim):
+def image_resize2(img, target_size):
+    if img.shape[0] > 0 and img.shape[1] > 0:
+        factor_0 = target_size[0] / img.shape[0]
+        factor_1 = target_size[1] / img.shape[1]
+        factor = min(factor_0, factor_1)
+
+        dsize = (int(img.shape[1] * factor), int(img.shape[0] * factor))
+        img = cv2.resize(img, dsize)
+
+        diff_0 = target_size[0] - img.shape[0]  
+        diff_1 = target_size[1] - img.shape[1]
+        
+        img = np.pad(img, ((diff_0 // 2, diff_0 - diff_0 // 2), (diff_1 // 2, diff_1 - diff_1 // 2)), 'constant')
+
+    if img.shape[0:2] != target_size:
+        img = cv2.resize(img, target_size)
+        
+    return img
+
+def crop_videos(input_dir, output_dir, detector = 'retinaface', dim = (128, 128)):
     videos = glob(os.path.join(input_dir, '*.mp4'))
 
     for video in videos:
@@ -153,17 +172,9 @@ def crop_videos2(input_dir, output_dir, dim):
 
         for i in range(frames.shape[0]):
             gray = cv2.cvtColor(frames[i,:,:,:].squeeze(), cv2.COLOR_BGR2GRAY)
-
-            try:
-                face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), 
-                    target_size = dim, 
-                    detector_backend = detector,
-                    #align = False
-                )
-
-                faces.append((face * 255).astype(np.uint8))
-            except:
-                logging.info(f"No face detected on frame: {i}. Skipping")
+            x, y, w, h = face_cascade.detectMultiScale(gray, 1.3, 5)
+            cropped = frames[y:y+h, x:x+w]
+            cropped = image_resize2(cropped, dim)
 
         if len(faces) > 0:
             cropped = np.stack(faces, axis=0)
@@ -187,4 +198,4 @@ if __name__ == '__main__':
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    crop_videos(input_dir, output_dir, detector, (dim, dim))
+    crop_videos2(input_dir, output_dir, (dim, dim))
