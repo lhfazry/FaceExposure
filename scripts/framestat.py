@@ -33,6 +33,7 @@ def get_frame_count(filename: str):
     capture = cv2.VideoCapture(filename)
 
     frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
+    capture.release()
     return frame_count
 
 def calc_frame_stat(dir):
