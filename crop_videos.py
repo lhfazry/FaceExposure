@@ -171,13 +171,14 @@ def crop_videos2(input_dir, output_dir, dim):
         faces = []
 
         for i in range(frames.shape[0]):
-            gray = cv2.cvtColor(frames[i,:,:,:].squeeze(), cv2.COLOR_BGR2GRAY)
+            frame = frames[i,:,:,:].squeeze()
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             # x, y, w, h
             detected_faces  = face_cascade.detectMultiScale(gray, 1.3, 5)
 
             if len(detected_faces) > 0:
                 x, y, w, h = detected_faces[0]
-                cropped = frames[y:y+h, x:x+w]
+                cropped = frame[y:y+h, x:x+w]
 
                 logging.info(f"Cropped frame shape: {cropped.shape}")
                 cropped = image_resize2(cropped, dim)
