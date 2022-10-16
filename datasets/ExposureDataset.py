@@ -28,8 +28,17 @@ class ExposureDataset(torch.utils.data.Dataset):
             raise ValueError("Path does not exist: " + root)
 
         df = pd.read_csv(os.path.join(root, "video_exposure.csv"))
-        self.df = df[df["split"] == split]
+        df = df[df["split"] == split]
 
+        valid_rows = []
+
+        for index, row in df.iterrows():
+            video_path = os.path.join(self.folder, row["video_name"])
+
+            if os.path.exists(video_path) and count_frame(video_path) > 50:
+                valid_rows.append(row)
+
+        self.df = pd.DataFrame(valid_rows)
         #print(df.columns)
 
         #self.df = df.astype({
@@ -170,6 +179,15 @@ def loadvideo(filename: str, frame_dim):
     assert v.size > 0
 
     return v
+
+def count_frame(filename: str):
+    if not os.path.exists(filename):
+        raise FileNotFoundError(filename)
+
+    capture = cv2.VideoCapture(filename)
+
+    frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
+    return frame_count
 
 def save_video(name, video, fps):
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')
