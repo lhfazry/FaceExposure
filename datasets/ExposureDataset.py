@@ -60,7 +60,7 @@ class ExposureDataset(torch.utils.data.Dataset):
 
         video = np.moveaxis(video, 0, 1) #(F, C, H, W)
         F, C, H, W = video.shape
-        sampling_rate = 1
+        #sampling_rate = 1
 
         #if F > 1024:
         #    sampling_rate = 3
@@ -69,9 +69,9 @@ class ExposureDataset(torch.utils.data.Dataset):
         #elif F > 512:
         #    sampling_rate = 1
 
-        sampling_rate = round(F / self.max_frames)
+        #sampling_rate = round(F / self.max_frames)
 
-        video = video[::sampling_rate,:,:,:]
+        video = video[:self.max_frames,:,:,:]
 
         if video.shape[0] > self.max_frames:
             video = video[:self.max_frames,:,:,:]
