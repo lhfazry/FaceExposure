@@ -16,18 +16,19 @@ from PIL import Image
 
 class ExposureDataset(torch.utils.data.Dataset):
     def __init__(self, root, split="train", frame_dim=128, augmented=False, 
-        max_frames = 512, sampling_strategy="truncate"):
+        max_frames = 512, sampling_strategy="truncate", csv_file="datasets/video_exposure.csv"):
 
         self.folder = pathlib.Path(root)
         self.augmented = augmented
         self.max_frames = max_frames
         self.frame_dim = frame_dim
         self.sampling_strategy = sampling_strategy
+        self.csv_file = csv_file
 
         if not os.path.exists(root):
             raise ValueError("Path does not exist: " + root)
 
-        df = pd.read_csv(os.path.join(root, "video_exposure.csv"))
+        df = pd.read_csv(csv_file)
         df = df[df["split"] == split]
 
         valid_rows = []
