@@ -31,19 +31,19 @@ class ExposureDataset(torch.utils.data.Dataset):
         df = pd.read_csv(csv_file)
         df = df[df["split"] == split]
 
-        print(f"CSV file: {csv_file}")
-        print(f"df len: {len(df)}")
+        #print(f"CSV file: {csv_file}")
+        #print(f"df len: {len(df)}")
         valid_rows = []
 
         for index, row in df.iterrows():
             video_path = os.path.join(self.folder, row["video_name"])
-            print(f"Video path: {video_path}")
+            #print(f"Video path: {video_path}")
 
             if os.path.exists(video_path) and count_frame(video_path) > 50:
                 valid_rows.append(row)
 
         self.df = pd.DataFrame(valid_rows)
-        print(f"Total rows: {len(valid_rows)}")
+        #print(f"Total rows: {len(valid_rows)}")
 
         #self.df = df.astype({
         #    "neutral": float, 
