@@ -156,17 +156,21 @@ def crop_videos2(input_dir, output_dir, dim):
             try:
                 face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), 
                     target_size = dim, 
-                    detector_backend = detector
+                    detector_backend = detector,
+                    align = False
                 )
 
                 faces.append((face * 255).astype(np.uint8))
             except:
                 logging.info(f"No face detected on frame: {i}. Skipping")
 
-        cropped = np.stack(faces, axis=0)
-        logging.info(f"Finished. Cropped shape: {cropped.shape}")
-        save_video(out_filename, np.stack(faces, axis=0), fps)
-        logging.info(f"Saved into: {out_filename}")
+        if len(faces) > 0:
+            cropped = np.stack(faces, axis=0)
+            logging.info(f"Finished. Cropped shape: {cropped.shape}")
+            save_video(out_filename, np.stack(faces, axis=0), fps)
+            logging.info(f"Saved into: {out_filename}")
+        else:
+            logging.info(f"No face on all frame")
 
 if __name__ == '__main__':
     input_dir = params.input_dir
