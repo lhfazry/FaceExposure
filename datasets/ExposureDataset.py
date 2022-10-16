@@ -40,7 +40,7 @@ class ExposureDataset(torch.utils.data.Dataset):
                 valid_rows.append(row)
 
         self.df = pd.DataFrame(valid_rows)
-        #print(df.columns)
+        print(f"Total rows: {len(valid_rows)}")
 
         #self.df = df.astype({
         #    "neutral": float, 
