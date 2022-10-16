@@ -113,7 +113,7 @@ def image_resize2(img, target_size):
         diff_0 = target_size[0] - img.shape[0]  
         diff_1 = target_size[1] - img.shape[1]
         
-        img = np.pad(img, ((diff_0 // 2, diff_0 - diff_0 // 2), (diff_1 // 2, diff_1 - diff_1 // 2)), 'constant')
+        img = np.pad(img, ((diff_0 // 2, diff_0 - diff_0 // 2), (diff_1 // 2, diff_1 - diff_1 // 2), (0, 0)), 'constant')
 
     if img.shape[0:2] != target_size:
         img = cv2.resize(img, target_size)
@@ -173,15 +173,14 @@ def crop_videos2(input_dir, output_dir, dim):
         for i in range(frames.shape[0]):
             frame = frames[i,:,:,:].squeeze()
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            # x, y, w, h
             detected_faces  = face_cascade.detectMultiScale(gray, 1.3, 5)
 
             if len(detected_faces) > 0:
                 x, y, w, h = detected_faces[0]
-                cropped = frame[y:y+h, x:x+w]
+                cropped_frame = frame[y:y+h, x:x+w]
 
-                logging.info(f"Cropped frame shape: {cropped.shape}")
-                cropped = image_resize2(cropped, dim)
+                logging.info(f"Cropped frame shape: {cropped_frame.shape}")
+                cropped_frame = image_resize2(cropped_frame, dim)
             else:
                 logging.info(f"No face detected on frame {i}")
 
