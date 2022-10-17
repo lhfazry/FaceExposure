@@ -16,11 +16,12 @@ from PIL import Image
 
 class ExposureDataset(torch.utils.data.Dataset):
     def __init__(self, root, split="train", frame_dim=128, augmented=False, 
-        max_frames = 512, sampling_strategy="truncate", csv_file="datasets/video_exposure.csv"):
+        min_frames = 80, max_frames = 512, sampling_strategy="truncate", csv_file="datasets/video_exposure.csv"):
 
         self.folder = pathlib.Path(root)
         self.augmented = augmented
         self.max_frames = max_frames
+        self.min_frames = min_frames
         self.frame_dim = frame_dim
         self.sampling_strategy = sampling_strategy
         self.csv_file = csv_file
@@ -39,7 +40,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             video_path = os.path.join(self.folder, row["video_name"])
             #print(f"Video path: {video_path}")
 
-            if os.path.exists(video_path) and count_frame(video_path) > 50:
+            if os.path.exists(video_path) and count_frame(video_path) > self.min_frames:
                 valid_rows.append(row)
 
         self.df = pd.DataFrame(valid_rows)
