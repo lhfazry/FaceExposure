@@ -96,11 +96,11 @@ class ExposureDataset(torch.utils.data.Dataset):
         if video.shape[0] > self.max_frames:
             video = video[:self.max_frames,:,:,:]
         elif video.shape[0] < self.max_frames:
-            print(f"{row['video_name']}: {video.shape}")
+            #print(f"{row['video_name']}: {video.shape}")
             pads = np.zeros((self.max_frames - F, 3, H, W))
 
-            print(f"padding shape: {pads.shape}")
-            video = np.concatenate(video, pads)
+            #print(f"padding shape: {pads.shape}")
+            video = np.concatenate((video, pads), axis=0)
 
         assert video.shape[0] == self.max_frames
 
