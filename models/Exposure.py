@@ -86,7 +86,7 @@ class Exposure(pl.LightningModule):
             nn.LeakyReLU(negative_slope=0.05, inplace=True),
 
             nn.LayerNorm(2*embed_dim),
-            nn.Linear(in_features=2*embed_dim, out_features=8, bias=True)
+            nn.Linear(in_features=2*embed_dim, out_features=8)
 
             #Reduce()
         )
@@ -147,7 +147,7 @@ class Exposure(pl.LightningModule):
         #print(f"prediction_label shape: {prediction_label.shape}")
 
         loss = self.loss_fn(prediction_label, batch['label'])
-        a = self.confusion_matrix((prediction_label > 0.5).long(), batch['label'].long())
+        #a = self.confusion_matrix((prediction_label > 0.5).long(), batch['label'].long())
         #print(a)
 
         #loss = F.cross_entropy(prediction_labels['neutral'].sigmoid(), batch['neutral'])
