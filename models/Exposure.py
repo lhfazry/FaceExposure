@@ -180,7 +180,8 @@ class Exposure(pl.LightningModule):
         return self.shared_step(batch, 'predict')
 
     def configure_optimizers(self):
-        optimizer = torch.optim.AdamW(self.parameters(), lr=1e-4, weight_decay=1e-4)
-        lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.85, verbose=True)
+        #optimizer = torch.optim.AdamW(self.parameters(), lr=1e-4, weight_decay=1e-4)
+        optimizer = torch.optim.AdamW()
+        #lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.85, verbose=True)
 
-        return [optimizer], [lr_scheduler]
+        return [optimizer]#, [lr_scheduler]

@@ -75,8 +75,8 @@ if __name__ == '__main__':
                 enable_model_summary=True,
                 logger=logger,
                 precision=16,
-                log_every_n_steps=40,)
-                #callbacks=[EarlyStopping(monitor="val_loss", mode="min", patience=10)])
+                log_every_n_steps=40,
+                callbacks=[EarlyStopping(monitor="val_loss", mode="min", patience=10)])
 
     if mode == 'train':
         trainer.fit(model=exposure, datamodule=data_module, ckpt_path=ckpt_path)
