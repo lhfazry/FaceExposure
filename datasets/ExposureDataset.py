@@ -75,6 +75,9 @@ class ExposureDataset(torch.utils.data.Dataset):
         #key = os.path.splitext(self.fnames[index])[0]
 
         video = np.moveaxis(video, 0, 1) #(F, C, H, W)
+        # Scale pixel values from 0-255 to 0-1
+        video /= 255.0
+
         F, C, H, W = video.shape
         #sampling_rate = 1
 
