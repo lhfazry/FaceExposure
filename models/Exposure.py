@@ -180,7 +180,7 @@ class Exposure(pl.LightningModule):
 
         loss = self.loss_fn(prediction_label, batch['label'])
         self.confusion_matrix((prediction_label.sigmoid() > 0.5).long(), batch['label'].long())
-        self.accuracy(prediction_label, batch['label'])
+        self.accuracy(prediction_label.sigmoid(), batch['label'])
         
         self.log('test_loss', loss, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
         self.log('accuracy', self.accuracy, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
