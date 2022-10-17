@@ -71,12 +71,10 @@ class ExposureDataset(torch.utils.data.Dataset):
         #print(f"Load video from: {path}")
 
         # Load video into np.array
-        video = loadvideo(path, self.frame_dim).astype(np.float32) / 255.
+        video = loadvideo(path, self.frame_dim)#.astype(np.float32) / 255.0
         #key = os.path.splitext(self.fnames[index])[0]
 
         video = np.moveaxis(video, 0, 1) #(F, C, H, W)
-        # Scale pixel values from 0-255 to 0-1
-        video /= 255.0
 
         F, C, H, W = video.shape
         #sampling_rate = 1
@@ -141,6 +139,8 @@ class ExposureDataset(torch.utils.data.Dataset):
         #row["fear"] = one_hot(torch.tensor(row["fear"]), num_classes=2)
 
         #print(f"neutral tensor: {row['neutral']}")
+        video = video.astype(np.float32) / 255.0
+        
         return {'video': video, 'label': label}
             
     def __len__(self):
