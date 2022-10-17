@@ -20,6 +20,7 @@ parser.add_argument("--dataset_mode", type=str, default='repeat', help="Dataset 
 parser.add_argument("--logs_dir", type=str, default='lightning_logs', help="Log dir")
 parser.add_argument("--variant", type=str, default='base', help="Variant model")
 parser.add_argument("--csv_file", type=str, default='datasets/video_exposure.csv', help="File csv")
+parser.add_argument("--sampling_strategy", type=str, default='trauncate', help="Sampling strategy")
 parser.add_argument("--multi_stage_training", action='store_true', help="Multi stage training")
 parser.add_argument("--log", action='store_true', help="log")
 
@@ -38,6 +39,7 @@ if __name__ == '__main__':
     accelerator = params.accelerator
     dataset_mode = params.dataset_mode
     csv_file = params.csv_file
+    sampling_strategy = params.sampling_strategy
     logs_dir = params.logs_dir
     multi_stage_training = params.multi_stage_training
     log = params.log
@@ -48,7 +50,8 @@ if __name__ == '__main__':
     data_module = ExposuretDataModule(data_dir=data_dir, 
                         batch_size=batch_size, 
                         num_workers=num_workers, 
-                        dataset_mode=dataset_mode, 
+                        dataset_mode=dataset_mode,
+                        sampling_strategy=sampling_strategy, 
                         csv_file=csv_file)
 
     if variant == 'small':

@@ -174,7 +174,12 @@ class Exposure(pl.LightningModule):
         return self.shared_step(batch, 'val')
 
     def test_step(self, batch, batch_idx):
-        return self.shared_step(batch, 'test')
+        prediction_label = self(batch['video'])
+
+        loss = self.loss_fn(prediction_label, batch['label'])
+        cm = self.confusion_matrix((prediction_label.sigmoid() > 0.5).long(), batch['label'].long())
+        
+        return {"test_loss": loss, "cm": cm}
 
     def predict_step(self, batch, batch_idx):
         return self.shared_step(batch, 'predict')
