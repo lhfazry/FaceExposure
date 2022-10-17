@@ -97,7 +97,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             video = video[:self.max_frames,:,:,:]
         elif video.shape[0] < self.max_frames:
             pads = np.zeros((self.max_frames - F, H, W, 3))
-            video = np.concatenate(video, pads)
+            video = np.concatenate((video, pads), axis=0)
 
         assert video.shape[0] == self.max_frames
 
@@ -220,5 +220,5 @@ def center_crop_arr(pil_image, image_size):
     arr = np.array(pil_image)
     crop_y = (arr.shape[0] - image_size) // 2
     crop_x = (arr.shape[1] - image_size) // 2
-    
+
     return arr[crop_y : crop_y + image_size, crop_x : crop_x + image_size]
