@@ -5,6 +5,7 @@ import torch.nn as nn
 import torchmetrics
 import torch.nn.functional as F
 
+from torchmetrics.classification import MultilabelAccuracy
 from torch.nn import functional as F
 from backbones.swin_transformer import SwinTransformer3D
 from einops import rearrange
@@ -42,6 +43,7 @@ class Exposure(pl.LightningModule):
         self.multi_stage_training = multi_stage_training
         self.loss_fn = nn.BCEWithLogitsLoss()
         self.confusion_matrix = torchmetrics.ConfusionMatrix(8, multilabel=True)
+        self.accuracy = MultilabelAccuracy(num_labels=8)
 
         #self.train_rmse = RMSE()
         #self.train_mae = torchmetrics.MeanAbsoluteError()
@@ -177,9 +179,12 @@ class Exposure(pl.LightningModule):
         prediction_label = self(batch['video'])
 
         loss = self.loss_fn(prediction_label, batch['label'])
-        cm = self.confusion_matrix((prediction_label.sigmoid() > 0.5).long(), batch['label'].long())
+        self.confusion_matrix((prediction_label.sigmoid() > 0.5).long(), batch['label'].long())
+        self.accuracy(prediction_label, batch['label'])
         
-        return {"test_loss": loss, "cm": cm}
+        self.log('test_loss', loss, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
+        self.log('cm', self.confusion_matrix, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
+        self.log('accuracy', self.accuracy, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
 
     def predict_step(self, batch, batch_idx):
         return self.shared_step(batch, 'predict')
