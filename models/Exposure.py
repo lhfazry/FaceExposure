@@ -183,8 +183,8 @@ class Exposure(pl.LightningModule):
         self.accuracy(prediction_label, batch['label'])
         
         self.log('test_loss', loss, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
-        self.log('cm', self.confusion_matrix, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
         self.log('accuracy', self.accuracy, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
+        #self.log('cm', self.confusion_matrix, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
 
     def predict_step(self, batch, batch_idx):
         return self.shared_step(batch, 'predict')
