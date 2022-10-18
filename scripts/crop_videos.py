@@ -138,18 +138,19 @@ def crop_videos(input_dir, output_dir, detector = 'retinaface', dim = (128, 128)
 
         for i in range(frames.shape[0]):
             try:
-                face = DeepFace.detectFace(img_path = image_resize(frames[i,:,:,:].squeeze(), height=256), 
+                face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(),#image_resize(frames[i,:,:,:].squeeze(), height=256), 
                     target_size = dim, 
                     detector_backend = detector,
-                    align = False
+                    align = True
                 )
 
                 faces.append((face * 255).astype(np.uint8))
             except:
-                logging.info(f"No face detected on frame: {i}. Skipping")
+                pass
+                #logging.info(f"No face detected on frame: {i}. Skipping")
 
         cropped = np.stack(faces, axis=0)
-        logging.info(f"Finished. Cropped shape: {cropped.shape}")
+        logging.info(f"Finished. Cropped shape: {cropped.shape}. Total removed frames: {len(frames) - len(faces)}")
         save_video(out_filename, np.stack(faces, axis=0), fps)
         logging.info(f"Saved into: {out_filename}")
 
@@ -207,4 +208,5 @@ if __name__ == '__main__':
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    crop_videos2(input_dir, output_dir, (dim, dim))
+    crop_videos(input_dir, output_dir, detector, (dim, dim))
+    #crop_videos2(input_dir, output_dir, (dim, dim))
