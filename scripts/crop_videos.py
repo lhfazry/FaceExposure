@@ -62,12 +62,14 @@ def load_video(filename: str, image_size = 256):
 
     return fps, v
 
-def save_video(name, video, fps):
+def save_video(name, video, fps, convert_to_bgr = True):
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     data = cv2.VideoWriter(name, fourcc, float(fps), (video.shape[1], video.shape[2]))
 
     for frame in video:
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+        if convert_to_bgr:
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+
         data.write(frame)
 
     data.release()
@@ -191,7 +193,7 @@ def crop_videos2(input_dir, output_dir, dim):
         if len(faces) > 0:
             cropped = np.stack(faces, axis=0)
             logging.info(f"Finished. Cropped shape: {cropped.shape}")
-            save_video(out_filename, np.stack(faces, axis=0), fps)
+            save_video(out_filename, np.stack(faces, axis=0), fps, convert_to_bgr=False)
             logging.info(f"Saved into: {out_filename}")
         else:
             logging.info(f"No face on all frame")
