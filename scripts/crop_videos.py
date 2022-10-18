@@ -162,7 +162,7 @@ def crop_videos2(input_dir, output_dir, dim):
     face_cascade = cv2.CascadeClassifier('face_detection/haarcascade_frontalface_default.xml')
     videos = glob(os.path.join(input_dir, '*.mp4'))
 
-    for video in videos:
+    for idx, video in enumerate(videos):
         filename = Path(video).name
         out_filename = os.path.join(output_dir, filename)
 
@@ -171,7 +171,7 @@ def crop_videos2(input_dir, output_dir, dim):
             continue
 
         fps, frames = load_video(video)
-        logging.info(f"Processing: {filename}, shape: {frames.shape}")
+        logging.info(f"Processing {idx + 1} of {len(videos)}: {filename}, shape: {frames.shape}")
 
         faces = []
 
