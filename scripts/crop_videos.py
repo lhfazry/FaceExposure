@@ -48,7 +48,7 @@ def load_video(filename: str, image_size = 256):
         if not ret:
             raise ValueError("Failed to load frame #{} of {}.".format(count, filename))
 
-        #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         #frame = cv2.resize(frame, (frame_dim, frame_dim))
         frame = image_resize(frame, height = image_size)
         v[count] = frame
@@ -145,7 +145,7 @@ def crop_videos(input_dir, output_dir, detector = 'ssd', dim = (128, 128)):
                 face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), #image_resize(frames[i,:,:,:].squeeze(), height=256), 
                     target_size = dim, 
                     detector_backend = detector,
-                    align = True
+                    align = False
                 )
 
                 faces.append((face * 255).astype(np.uint8))
