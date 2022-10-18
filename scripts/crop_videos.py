@@ -36,11 +36,11 @@ def load_video(filename: str, image_size = 256):
     capture = cv2.VideoCapture(filename)
 
     frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
-    frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
-    frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    #frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+    #frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(capture.get(cv2.CAP_PROP_FPS))
 
-    v = np.zeros((frame_count, frame_height, frame_width, 3), np.uint8) # (F, H, W, C)
+    v = np.zeros((frame_count, image_size, image_size, 3), np.uint8) # (F, H, W, C)
 
     for count in range(frame_count):
         ret, frame = capture.read()
