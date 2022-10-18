@@ -178,7 +178,7 @@ def crop_videos2(input_dir, output_dir, dim):
         for i in range(frames.shape[0]):
             frame = frames[i,:,:,:].squeeze()
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            detected_faces  = face_cascade.detectMultiScale(gray, 1.3, 5)
+            detected_faces  = face_cascade.detectMultiScale(gray, 1.1, 5)
 
             if len(detected_faces) > 0:
                 x, y, w, h = detected_faces[0]
@@ -188,12 +188,13 @@ def crop_videos2(input_dir, output_dir, dim):
                 cropped_frame = image_resize2(cropped_frame, dim)
                 faces.append(cropped_frame)
             else:
-                logging.info(f"No face detected on frame {i}")
+                pass
+                #logging.info(f"No face detected on frame {i}")
 
         if len(faces) > 0:
             cropped = np.stack(faces, axis=0)
-            logging.info(f"Finished. Cropped shape: {cropped.shape}")
-            save_video(out_filename, np.stack(faces, axis=0), fps, convert_to_bgr=False)
+            logging.info(f"Finished. Cropped shape: {cropped.shape}. Total removed frames: {len(frames) - len(faces)}")
+            save_video(out_filename, np.stack(faces, axis=0), fps)
             logging.info(f"Saved into: {out_filename}")
         else:
             logging.info(f"No face on all frame")
@@ -212,5 +213,5 @@ if __name__ == '__main__':
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    crop_videos(input_dir, output_dir, detector, (dim, dim))
-    #crop_videos2(input_dir, output_dir, (dim, dim))
+    #crop_videos(input_dir, output_dir, detector, (dim, dim))
+    crop_videos2(input_dir, output_dir, (dim, dim))
