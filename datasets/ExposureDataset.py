@@ -64,6 +64,8 @@ class ExposureDataset(torch.utils.data.Dataset):
             va.VerticalFlip(),
             va.GaussianBlur(random.random())
         ])
+
+        print(f"Total valid rows: {len(valid_rows)}")
             
     def __getitem__(self, index):
         row = self.df.iloc[index].to_dict()
