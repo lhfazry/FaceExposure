@@ -138,7 +138,7 @@ def crop_videos(input_dir, output_dir, detector = 'retinaface', dim = (128, 128)
 
         for i in range(frames.shape[0]):
             try:
-                face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(),#image_resize(frames[i,:,:,:].squeeze(), height=256), 
+                face = DeepFace.detectFace(img_path = image_resize(frames[i,:,:,:].squeeze(), height=256), 
                     target_size = dim, 
                     detector_backend = detector,
                     align = True
