@@ -177,21 +177,23 @@ class Exposure(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         prediction_label = self(batch['video'])
+        print(f"predict: {prediction_label}")
+        print(f"label: {batch['label']}")
 
         loss = self.loss_fn(prediction_label, batch['label'])
         self.confusion_matrix((prediction_label.sigmoid() > 0.5).long(), batch['label'].long())
-        self.accuracy(prediction_label.sigmoid(), batch['label'])
+        self.accuracy(prediction_label, batch['label'])
         
-        self.log('test_loss', loss, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
-        self.log('accuracy', self.accuracy, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
+        self.log('test_loss', loss, on_epoch=True)
+        self.log('accuracy', self.accuracy, on_epoch=True)
         #self.log('cm', self.confusion_matrix, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
 
     def predict_step(self, batch, batch_idx):
         return self.shared_step(batch, 'predict')
 
     def configure_optimizers(self):
-        #optimizer = torch.optim.AdamW(self.parameters(), lr=1e-4, weight_decay=1e-4)
-        optimizer = torch.optim.AdamW(self.parameters())
+        optimizer = torch.optim.AdamW(self.parameters(), lr=1e-3, weight_decay=1e-2)
+        #optimizer = torch.optim.AdamW(self.parameters())
         #lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.85, verbose=True)
 
         return [optimizer]#, [lr_scheduler]
