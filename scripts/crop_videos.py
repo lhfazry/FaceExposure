@@ -10,7 +10,7 @@ from glob import glob
 parser = argparse.ArgumentParser()
 parser.add_argument("--input_dir", type=str, default=None, help="Input directory")
 parser.add_argument("--output_dir", type=str, default=None, help="Output directory")
-parser.add_argument("--detector", type=str, default='retinaface', help="Backend detector")
+parser.add_argument("--detector", type=str, default='ssd', help="Backend detector")
 parser.add_argument("--dim", type=int, default=128, help="Spatial dimension")
 
 params = parser.parse_args()
@@ -120,7 +120,7 @@ def image_resize2(img, target_size):
         
     return img
 
-def crop_videos(input_dir, output_dir, detector = 'retinaface', dim = (128, 128)):
+def crop_videos(input_dir, output_dir, detector = 'ssd', dim = (128, 128)):
     videos = glob(os.path.join(input_dir, '*.mp4'))
 
     for video in videos:
