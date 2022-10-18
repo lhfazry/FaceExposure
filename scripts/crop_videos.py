@@ -123,7 +123,7 @@ def image_resize2(img, target_size):
 def crop_videos(input_dir, output_dir, detector = 'ssd', dim = (128, 128)):
     videos = glob(os.path.join(input_dir, '*.mp4'))
 
-    for video in videos:
+    for idx, video in enumerate(videos):
         filename = Path(video).name
         out_filename = os.path.join(output_dir, filename)
 
@@ -132,7 +132,7 @@ def crop_videos(input_dir, output_dir, detector = 'ssd', dim = (128, 128)):
             continue
 
         fps, frames = load_video(video)
-        logging.info(f"Processing: {filename}, shape: {frames.shape}")
+        logging.info(f"Processing {idx + 1} of {len(videos)}: {filename}, shape: {frames.shape}")
 
         faces = []
 
