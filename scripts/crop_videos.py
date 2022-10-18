@@ -15,7 +15,7 @@ parser.add_argument("--dim", type=int, default=128, help="Spatial dimension")
 
 params = parser.parse_args()
 
-def load_video(filename: str, image_size = 256):
+def load_video(filename: str):
     """Loads a video from a file.
 
     Args:
@@ -36,11 +36,11 @@ def load_video(filename: str, image_size = 256):
     capture = cv2.VideoCapture(filename)
 
     frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
-    #frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
-    #frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(capture.get(cv2.CAP_PROP_FPS))
 
-    v = np.zeros((frame_count, image_size, image_size, 3), np.uint8) # (F, H, W, C)
+    v = np.zeros((frame_count, frame_height, frame_width, 3), np.uint8) # (F, H, W, C)
 
     for count in range(frame_count):
         ret, frame = capture.read()
@@ -50,7 +50,7 @@ def load_video(filename: str, image_size = 256):
 
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         #frame = cv2.resize(frame, (frame_dim, frame_dim))
-        frame = image_resize(frame, height = image_size)
+        #frame = image_resize(frame, height = image_size)
         v[count] = frame
 
         count += 1
@@ -142,7 +142,7 @@ def crop_videos(input_dir, output_dir, detector = 'ssd', dim = (128, 128)):
 
         for i in range(frames.shape[0]):
             try:
-                face = DeepFace.detectFace(img_path = frames[i,:,:,:].squeeze(), #image_resize(frames[i,:,:,:].squeeze(), height=256), 
+                face = DeepFace.detectFace(img_path = image_resize(frames[i,:,:,:].squeeze(), height=256), 
                     target_size = dim, 
                     detector_backend = detector,
                     align = False
