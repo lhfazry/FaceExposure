@@ -10,7 +10,7 @@ from glob import glob
 parser = argparse.ArgumentParser()
 parser.add_argument("--input_dir", type=str, default=None, help="Input directory")
 parser.add_argument("--output_dir", type=str, default=None, help="Output directory")
-parser.add_argument("--detector", type=str, default='opencv', help="Backend detector")
+parser.add_argument("--detector", type=str, default='retinaface', help="Backend detector")
 parser.add_argument("--dim", type=int, default=128, help="Spatial dimension")
 
 params = parser.parse_args()
