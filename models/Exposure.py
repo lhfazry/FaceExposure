@@ -99,6 +99,8 @@ class Exposure(pl.LightningModule):
             #Reduce()
         )
 
+        self.avg_pool = nn.AdaptiveAvgPool3d(1)
+
         #self.neutral_classifier = nn.Sequential(nn.Dropout(p=0.2), nn.Linear(in_features=2*embed_dim, out_features=2))
         #self.happy_classifier = nn.Sequential(nn.Dropout(p=0.2), nn.Linear(in_features=2*embed_dim, out_features=2))
         #self.sad_classifier = nn.Sequential(nn.Dropout(p=0.2), nn.Linear(in_features=2*embed_dim, out_features=2))
@@ -123,9 +125,11 @@ class Exposure(pl.LightningModule):
 
     def forward_head(self, x):
         # input ==> n c d h w
-        x = rearrange(x, 'n c d h w -> n d c h w')
-        x = x.flatten(-2).mean(3).mean(1) # n d c
-        
+        #x = rearrange(x, 'n c d h w -> n d c h w')
+        #x = x.flatten(-2).mean(3).mean(1) # n d c
+    
+        x = self.avg_pool(x) # n c 1 1 1
+        x = x.squeeze() # n c
         x = self.classifier(x) # n 8
 
         #return {
