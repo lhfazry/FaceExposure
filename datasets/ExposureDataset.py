@@ -16,52 +16,25 @@ from sklearn.model_selection import train_test_split
 
 class ExposureDataset(torch.utils.data.Dataset):
     def __init__(self, root, 
-            split="train", 
+            data, 
+            label, 
             frame_dim=128, 
             augmented=False, 
             min_frames = 80, 
             max_frames = 512, 
-            sampling_strategy="truncate", 
-            csv_file="datasets/video_exposure.csv"):
+            sampling_strategy="truncate"):
 
         self.folder = pathlib.Path(root)
+        #self.data = data,
+        #self.label = label,
         self.augmented = augmented
         self.max_frames = max_frames
         self.min_frames = min_frames
         self.frame_dim = frame_dim
         self.sampling_strategy = sampling_strategy
-        self.csv_file = csv_file
 
         if not os.path.exists(root):
             raise ValueError("Path does not exist: " + root)
-
-        df = pd.read_csv(csv_file)
-        df = df[df["split"] == split]
-
-        #print(f"CSV file: {csv_file}")
-        #print(f"df len: {len(df)}")
-        valid_rows = []
-
-        for index, row in df.iterrows():
-            video_path = os.path.join(self.folder, row["video_name"])
-            #print(f"Video path: {video_path}")
-
-            if os.path.exists(video_path) and count_frame(video_path) > self.min_frames:
-                valid_rows.append(row)
-
-        self.df = pd.DataFrame(valid_rows)
-        #print(f"Total rows: {len(valid_rows)}")
-
-        #self.df = df.astype({
-        #    "neutral": float, 
-        #    "happy": float, 
-        #    "sad": float,
-        #    "contempt": float, 
-        #    "anger": float, 
-        #    "disgust": float, 
-        #    "surprised": float, 
-        #    "fear": float
-        #})
 
         self.vid_augs = va.Sequential([
             #va.RandomCrop(size=(240, 180)), # randomly crop video with a size of (240 x 180)
@@ -71,11 +44,16 @@ class ExposureDataset(torch.utils.data.Dataset):
             va.GaussianBlur(random.random())
         ])
 
-        print(f"Total valid rows: {len(valid_rows)}")
+        self.data_df = pd.DataFrame(data, columns=["video_name"])
+        self.label_df = pd.DataFrame(label, columns=["neutral", "happy", "sad", "contempt", "anger", "disgust", "surprised", "fear"])
+
+        #print(f"Total valid rows: {len(valid_rows)}")
             
     def __getitem__(self, index):
-        row = self.df.iloc[index].to_dict()
-        path = os.path.join(self.folder, row["video_name"])
+        data = self.data_df.iloc[index].to_dict()
+        label = self.label_df.iloc[index].to_dict()
+        #row = self.df.iloc[index].to_dict()
+        path = os.path.join(self.folder, data["video_name"])
         #print(f"Load video from: {path}")
 
         # Load video into np.array
@@ -126,27 +104,16 @@ class ExposureDataset(torch.utils.data.Dataset):
         #save_video(filename + ".avi", np.asarray(saved_video).astype(np.uint8), 50)
 
         label = np.array([
-            row["neutral"],
-            row["happy"],
-            row["sad"],
-            row["contempt"],
-            row["anger"],
-            row["disgust"],
-            row["surprised"],
-            row["fear"]
+            label["neutral"],
+            label["happy"],
+            label["sad"],
+            label["contempt"],
+            label["anger"],
+            label["disgust"],
+            label["surprised"],
+            label["fear"]
         ]).astype(np.float32)
 
-        #row['video'] = video 
-        #row["neutral"] = one_hot(torch.tensor(row["neutral"]), num_classes=2)
-        #row["happy"] = one_hot(torch.tensor(row["happy"]), num_classes=2)
-        #row["sad"] = one_hot(torch.tensor(row["sad"]), num_classes=2)
-        #row["contempt"] = one_hot(torch.tensor(row["contempt"]), num_classes=2)
-        #row["anger"] = one_hot(torch.tensor(row["anger"]), num_classes=2)
-        #row["disgust"] = one_hot(torch.tensor(row["disgust"]), num_classes=2)
-        #row["surprised"] = one_hot(torch.tensor(row["surprised"]), num_classes=2)
-        #row["fear"] = one_hot(torch.tensor(row["fear"]), num_classes=2)
-
-        #print(f"neutral tensor: {row['neutral']}")
         video = video.astype(np.float32) / 255.0
         
         return {'video': video, 'label': label}
