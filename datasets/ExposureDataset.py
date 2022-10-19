@@ -119,7 +119,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         return {'video': video, 'label': label}
             
     def __len__(self):
-        return len(self.df)
+        return len(self.data_df)
 
 def loadvideo(filename: str, frame_dim):
     """Loads a video from a file.
