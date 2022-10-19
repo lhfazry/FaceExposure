@@ -192,17 +192,17 @@ class Exposure(pl.LightningModule):
         #false negatives for class i in M(1,0)
         #true positives for class i in M(1,1)
 
-        self.log('test_loss', loss, on_epoch=True, logger=False)
-        self.log('accuracy', self.accuracy, on_epoch=True, logger=False)
+        self.log('test_loss', loss, on_epoch=True)
+        self.log('accuracy', self.accuracy, on_epoch=True)
 
-        self.log('TN', cm_mean[0,0], on_epoch=True, logger=False)
-        self.log('FP', cm_mean[0,1], on_epoch=True, logger=False)
-        self.log('FN', cm_mean[1,0], on_epoch=True, logger=False)
-        self.log('TP', cm_mean[1,1], on_epoch=True, logger=False)
+        self.log('TN', cm_mean[0,0], on_epoch=True)
+        self.log('FP', cm_mean[0,1], on_epoch=True)
+        self.log('FN', cm_mean[1,0], on_epoch=True)
+        self.log('TP', cm_mean[1,1], on_epoch=True)
 
-        self.log('precision', self.prec, on_epoch=True, logger=False)
-        self.log('recall', self.recall, on_epoch=True, logger=False)
-        self.log('f1_score', self.f1_score, on_epoch=True, logger=False)
+        self.log('precision', self.prec, on_epoch=True)
+        self.log('recall', self.recall, on_epoch=True)
+        self.log('f1_score', self.f1_score, on_epoch=True)
 
     def predict_step(self, batch, batch_idx):
         return self.shared_step(batch, 'predict')
