@@ -9,5 +9,5 @@ CUDA_VISIBLE_DEVICES=$CUDA_ID python main.py \
     --accelerator=gpu \
     --variant=small \
     --max_epoch=15 \
-    --sampling_strategy=adaptive-down-sample \
+    --sampling_strategy=truncate \
     --csv_file=datasets/video_exposure.csv
