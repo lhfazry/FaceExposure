@@ -142,39 +142,30 @@ class Exposure(pl.LightningModule):
 
         return x
 
-    def shared_step(self, batch, stage):
-        #print(f"batch shape: {batch['video'].shape}")
-        #print(f"label shape: {batch['label'].shape}")
-        prediction_label = self(batch['video'])
-        #print(f"prediction_label shape: {prediction_label.shape}")
-
-        loss = self.loss_fn(prediction_label, batch['label'])
-        #a = self.confusion_matrix((prediction_label > 0.5).long(), batch['label'].long())
-        #print(a)
-
-        #loss = F.cross_entropy(prediction_labels['neutral'].sigmoid(), batch['neutral'])
-        #loss += F.cross_entropy(prediction_labels['happy'].sigmoid(), batch['happy'])
-        #loss += F.cross_entropy(prediction_labels['sad'].sigmoid(), batch['sad'])
-        #loss += F.cross_entropy(prediction_labels['contempt'].sigmoid(), batch['contempt'])
-        #loss += F.cross_entropy(prediction_labels['anger'].sigmoid(), batch['anger'])
-        #loss += F.cross_entropy(prediction_labels['disgust'].sigmoid(), batch['disgust'])
-        #loss += F.cross_entropy(prediction_labels['surprised'].sigmoid(), batch['surprised'])
-        #loss += F.cross_entropy(prediction_labels['fear'].sigmoid(), batch['fear'])
-        key = 'loss'
-
-        if stage == 'val':
-            key = 'val_loss'
-
-        self.log(key, loss, on_epoch=True, on_step=True, prog_bar=True)
-            
-        return {key: loss}
-
     def training_step(self, batch, batch_idx):
-        return self.shared_step(batch, 'train')
+        prediction_label = self(batch['video'])
+        loss = self.loss_fn(prediction_label, batch['label'])
+        acc = self.accuracy((prediction_label.sigmoid() > 0.5).long(), batch['label'])
+
+        self.log("loss", loss, on_epoch=True, on_step=True, prog_bar=True)
+        self.log("acc", acc, on_epoch=True, on_step=True, prog_bar=True)
+
+        self.logger.experiment.add_scalars('loss', {'train': loss}, self.global_step) 
+        self.logger.experiment.add_scalars('acc', {'train': acc}, self.global_step) 
+
+        return loss
 
     def validation_step(self, batch, batch_idx):
-        return self.shared_step(batch, 'val')
+        prediction_label = self(batch['video'])
+        loss = self.loss_fn(prediction_label, batch['label'])
+        acc = self.accuracy((prediction_label.sigmoid() > 0.5).long(), batch['label'])
 
+        self.log("val_loss", loss, on_epoch=True, on_step=True, prog_bar=True)
+        self.log("acc", acc, on_epoch=True, on_step=True, prog_bar=True)
+
+        self.logger.experiment.add_scalars('loss', {'val': loss}, self.global_step) 
+        self.logger.experiment.add_scalars('acc', {'val': acc}, self.global_step) 
+        
     def test_step(self, batch, batch_idx):
         prediction_label = self(batch['video'])
         print(f"predict: {prediction_label}")
