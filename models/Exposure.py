@@ -185,7 +185,7 @@ class Exposure(pl.LightningModule):
         self.prec(pred_label_sigmoid, batch['label'])
         self.recall(pred_label_sigmoid, batch['label'])
 
-        cm_mean = torch.mean(cm, 0, dtype=torch.float)
+        cm_mean = cm.float().mean(0)
         
         #true negatives for class i in M(0,0)
         #false positives for class i in M(0,1)
