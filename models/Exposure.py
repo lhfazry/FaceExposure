@@ -6,6 +6,9 @@ import torchmetrics
 import torch.nn.functional as F
 
 from torchmetrics.classification import MultilabelAccuracy
+from torchmetrics.classification import MultilabelF1Score
+from torchmetrics.classification import MultilabelPrecision
+from torchmetrics.classification import MultilabelRecall
 from torch.nn import functional as F
 from backbones.swin_transformer import SwinTransformer3D
 from einops import rearrange
@@ -43,6 +46,9 @@ class Exposure(pl.LightningModule):
         self.multi_stage_training = multi_stage_training
         self.loss_fn = nn.BCEWithLogitsLoss()
         self.confusion_matrix = torchmetrics.ConfusionMatrix(8, multilabel=True)
+        self.precision = MultilabelPrecision(num_labels=8)
+        self.recall = MultilabelRecall(num_labels=8)
+        self.f1_score = MultilabelF1Score(num_labels=8)
         self.accuracy = MultilabelAccuracy(num_labels=8)
 
         #self.train_rmse = RMSE()
@@ -147,11 +153,11 @@ class Exposure(pl.LightningModule):
         loss = self.loss_fn(prediction_label, batch['label'])
         acc = self.accuracy((prediction_label.sigmoid() > 0.5).long(), batch['label'])
 
-        self.log("loss", loss, on_epoch=True, on_step=True, prog_bar=True)
-        self.log("acc", acc, on_epoch=True, on_step=True, prog_bar=True)
+        self.log("loss", loss, on_epoch=True, on_step=True, prog_bar=True, logger=False)
+        self.log("acc", acc, on_epoch=True, on_step=True, prog_bar=True, logger=False)
 
-        self.logger.experiment.add_scalars('loss', {'train': loss}, self.global_step) 
-        self.logger.experiment.add_scalars('acc', {'train': acc}, self.global_step) 
+        self.logger.experiment.add_scalars('train_val_loss', {'train': loss}, self.global_step) 
+        self.logger.experiment.add_scalars('train_val_acc', {'train': acc}, self.global_step) 
 
         return loss
 
@@ -160,24 +166,43 @@ class Exposure(pl.LightningModule):
         loss = self.loss_fn(prediction_label, batch['label'])
         acc = self.accuracy((prediction_label.sigmoid() > 0.5).long(), batch['label'])
 
-        self.log("val_loss", loss, on_epoch=True, on_step=True, prog_bar=True)
-        self.log("acc", acc, on_epoch=True, on_step=True, prog_bar=True)
+        self.log("val_loss", loss, on_epoch=True, on_step=True, prog_bar=True, logger=False)
+        self.log("val_acc", acc, on_epoch=True, on_step=True, prog_bar=True, logger=False)
 
-        self.logger.experiment.add_scalars('loss', {'val': loss}, self.global_step) 
-        self.logger.experiment.add_scalars('acc', {'val': acc}, self.global_step) 
+        self.logger.experiment.add_scalars('train_val_loss', {'val': loss}, self.global_step) 
+        self.logger.experiment.add_scalars('train_val_acc', {'val': acc}, self.global_step) 
         
     def test_step(self, batch, batch_idx):
         prediction_label = self(batch['video'])
-        print(f"predict: {prediction_label}")
-        print(f"label: {batch['label']}")
+        pred_label_sigmoid = prediction_label.sigmoid()
+        #print(f"predict: {prediction_label}")
+        #print(f"label: {batch['label']}")
 
         loss = self.loss_fn(prediction_label, batch['label'])
-        self.confusion_matrix((prediction_label.sigmoid() > 0.5).long(), batch['label'].long())
-        self.accuracy(prediction_label, batch['label'])
+        cm = self.confusion_matrix(pred_label_sigmoid, batch['label'].long())
+        self.accuracy(pred_label_sigmoid, batch['label'])
+        self.f1_score(pred_label_sigmoid, batch['label'])
+        self.precision(pred_label_sigmoid, batch['label'])
+        self.recall(pred_label_sigmoid, batch['label'])
+
+        cm_mean = cm.mean(axis=0)
         
-        self.log('test_loss', loss, on_epoch=True)
-        self.log('accuracy', self.accuracy, on_epoch=True)
-        #self.log('cm', self.confusion_matrix, on_epoch=True, batch_size=self.batch_size, prog_bar=True)
+        #true negatives for class i in M(0,0)
+        #false positives for class i in M(0,1)
+        #false negatives for class i in M(1,0)
+        #true positives for class i in M(1,1)
+
+        self.log('test_loss', loss, on_epoch=True, logger=False)
+        self.log('accuracy', self.accuracy, on_epoch=True, logger=False)
+
+        self.log('TN', cm_mean[0,0], on_epoch=True, logger=False)
+        self.log('FP', cm_mean[0,1], on_epoch=True, logger=False)
+        self.log('FN', cm_mean[1,0], on_epoch=True, logger=False)
+        self.log('TP', cm_mean[1,1], on_epoch=True, logger=False)
+
+        self.log('precision', self.precision, on_epoch=True, logger=False)
+        self.log('recall', self.recall, on_epoch=True, logger=False)
+        self.log('f1_score', self.f1_score, on_epoch=True, logger=False)
 
     def predict_step(self, batch, batch_idx):
         return self.shared_step(batch, 'predict')
