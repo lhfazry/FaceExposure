@@ -48,7 +48,7 @@ def calc_frame_stat(dir):
 
         number_of_frames.append(frame_count)
 
-    df = pd.DataFrame(number_of_frames, columns=["Frames"])
+    df = pd.DataFrame(number_of_frames)
     logging.info(df.describe())
 
 if __name__ == '__main__':
