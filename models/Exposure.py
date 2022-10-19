@@ -46,7 +46,7 @@ class Exposure(pl.LightningModule):
         self.multi_stage_training = multi_stage_training
         self.loss_fn = nn.BCEWithLogitsLoss()
         self.confusion_matrix = torchmetrics.ConfusionMatrix(8, multilabel=True)
-        self.precision = MultilabelPrecision(num_labels=8)
+        self.prec = MultilabelPrecision(num_labels=8)
         self.recall = MultilabelRecall(num_labels=8)
         self.f1_score = MultilabelF1Score(num_labels=8)
         self.accuracy = MultilabelAccuracy(num_labels=8)
@@ -182,7 +182,7 @@ class Exposure(pl.LightningModule):
         cm = self.confusion_matrix(pred_label_sigmoid, batch['label'].long())
         self.accuracy(pred_label_sigmoid, batch['label'])
         self.f1_score(pred_label_sigmoid, batch['label'])
-        self.precision(pred_label_sigmoid, batch['label'])
+        self.prec(pred_label_sigmoid, batch['label'])
         self.recall(pred_label_sigmoid, batch['label'])
 
         cm_mean = cm.mean(axis=0)
@@ -200,7 +200,7 @@ class Exposure(pl.LightningModule):
         self.log('FN', cm_mean[1,0], on_epoch=True, logger=False)
         self.log('TP', cm_mean[1,1], on_epoch=True, logger=False)
 
-        self.log('precision', self.precision, on_epoch=True, logger=False)
+        self.log('precision', self.prec, on_epoch=True, logger=False)
         self.log('recall', self.recall, on_epoch=True, logger=False)
         self.log('f1_score', self.f1_score, on_epoch=True, logger=False)
 

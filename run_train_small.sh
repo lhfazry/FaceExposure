@@ -8,5 +8,5 @@ CUDA_VISIBLE_DEVICES=$CUDA_ID python main.py \
     --num_workers=4 \
     --accelerator=gpu \
     --variant=small \
-    --max_epoch=20 \
+    --max_epoch=15 \
     --csv_file=datasets/video_exposure.csv
