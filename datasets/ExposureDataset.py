@@ -84,7 +84,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             video = video[:self.max_frames,:,:,:]
         elif video.shape[0] < self.max_frames:
             #print(f"{row['video_name']}: {video.shape}")
-            pads = np.zeros((self.max_frames - F, 3, H, W))
+            pads = np.zeros((self.max_frames - video.shape[0], 3, H, W))
 
             #print(f"padding shape: {pads.shape}")
             video = np.concatenate((video, pads), axis=0)
