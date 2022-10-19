@@ -79,6 +79,12 @@ class ExposureDataset(torch.utils.data.Dataset):
         elif self.sampling_strategy == "down-sample":
             sampling_rate = round(F / self.max_frames)
             video = video[::1 if sampling_rate == 0 else sampling_rate,:,:,:]
+        elif self.sampling_strategy == "adaptive-down-sample":
+            if F > self.max_frames:
+                sampling_rate = round(F / self.max_frames)
+                video = video[::1 if sampling_rate == 0 else sampling_rate,:,:,:]
+            else:
+                video = video[:self.max_frames,:,:,:]
 
         if video.shape[0] > self.max_frames:
             video = video[:self.max_frames,:,:,:]
