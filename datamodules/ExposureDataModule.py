@@ -108,7 +108,7 @@ class ExposuretDataModule(pl.LightningDataModule):
     def predict_dataloader(self):
         return DataLoader(self.predict_set, batch_size=self.batch_size, num_workers=self.num_workers)
 
-    def count_frame(filename: str):
+    def count_frame(self, filename: str):
         if not os.path.exists(filename):
             raise FileNotFoundError(filename)
 
