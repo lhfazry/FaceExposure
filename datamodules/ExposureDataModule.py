@@ -97,16 +97,29 @@ class ExposuretDataModule(pl.LightningDataModule):
                                 sampling_strategy=self.sampling_strategy)
 
     def train_dataloader(self):
-        return DataLoader(self.train_set, batch_size=self.batch_size, num_workers=self.num_workers, shuffle=True)
+        return DataLoader(self.train_set, 
+            batch_size=self.batch_size, 
+            num_workers=self.num_workers, 
+            shuffle=True,
+            drop_last=True)
 
     def val_dataloader(self):
-        return DataLoader(self.val_set, batch_size=self.batch_size, num_workers=self.num_workers)
+        return DataLoader(self.val_set, 
+            batch_size=self.batch_size, 
+            num_workers=self.num_workers,
+            drop_last=True)
 
     def test_dataloader(self):
-        return DataLoader(self.test_set, batch_size=self.batch_size, num_workers=self.num_workers)
+        return DataLoader(self.test_set, 
+            batch_size=self.batch_size, 
+            num_workers=self.num_workers,
+            drop_last=True)
 
     def predict_dataloader(self):
-        return DataLoader(self.predict_set, batch_size=self.batch_size, num_workers=self.num_workers)
+        return DataLoader(self.predict_set, 
+            batch_size=self.batch_size, 
+            num_workers=self.num_workers,
+            drop_last=True)
 
     def count_frame(self, filename: str):
         if not os.path.exists(filename):
