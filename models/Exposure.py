@@ -160,8 +160,8 @@ class Exposure(pl.LightningModule):
         self.log("loss", loss, on_epoch=True, on_step=True, prog_bar=True, logger=False)
         self.log("acc", acc, on_epoch=True, on_step=True, prog_bar=True, logger=False)
 
-        self.logger.experiment.add_scalars('train_val_loss', {'train': loss}, global_step=self.current_epoch) 
-        self.logger.experiment.add_scalars('train_val_acc', {'train': acc}, global_step=self.current_epoch) 
+        self.logger.experiment.add_scalars('loss', {'train': loss}, global_step=self.current_epoch) 
+        self.logger.experiment.add_scalars('acc', {'train': acc}, global_step=self.current_epoch) 
 
         return loss
 
@@ -173,8 +173,8 @@ class Exposure(pl.LightningModule):
         self.log("val_loss", loss, on_epoch=True, on_step=True, prog_bar=True, logger=False)
         self.log("val_acc", acc, on_epoch=True, on_step=True, prog_bar=True, logger=False)
 
-        self.logger.experiment.add_scalars('train_val_loss', {'val': loss}, global_step=self.current_epoch) 
-        self.logger.experiment.add_scalars('train_val_acc', {'val': acc}, global_step=self.current_epoch) 
+        self.logger.experiment.add_scalars('loss', {'val': loss}, global_step=self.current_epoch) 
+        self.logger.experiment.add_scalars('acc', {'val': acc}, global_step=self.current_epoch) 
         
     def test_step(self, batch, batch_idx):
         prediction_label = self(batch['video'])
