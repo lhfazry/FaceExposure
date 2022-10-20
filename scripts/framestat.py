@@ -44,7 +44,7 @@ def calc_frame_stat(dir):
         filename = Path(video).name
         frame_count = get_frame_count(video)
 
-        logging.info(f"{filename} : {frame_count}")
+        #logging.info(f"{filename} : {frame_count}")
 
         number_of_frames.append(frame_count)
 
