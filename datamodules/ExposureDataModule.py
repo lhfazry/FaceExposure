@@ -69,7 +69,7 @@ class ExposuretDataModule(pl.LightningDataModule):
             self.train_set = ExposureDataset(root=self.data_dir,
                                 data=self.data_train,
                                 label=self.label_train,
-                                augmented=True,
+                                augmented=False,
                                 sampling_strategy=self.sampling_strategy)
             
             self.val_set   = ExposureDataset(root=self.data_dir, 
