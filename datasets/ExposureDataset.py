@@ -16,17 +16,15 @@ from sklearn.model_selection import train_test_split
 
 class ExposureDataset(torch.utils.data.Dataset):
     def __init__(self, root, 
-            data, 
-            label, 
-            frame_dim=128, 
+            data,
+            label,
+            frame_dim=128,
             augmented=False, 
             min_frames = 80, 
             max_frames = 512, 
             sampling_strategy="truncate"):
 
         self.folder = pathlib.Path(root)
-        #self.data = data,
-        #self.label = label,
         self.augmented = augmented
         self.max_frames = max_frames
         self.min_frames = min_frames

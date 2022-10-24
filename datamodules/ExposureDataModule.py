@@ -31,14 +31,13 @@ class ExposuretDataModule(pl.LightningDataModule):
 
     def prepare_data(self):
         df = pd.read_csv(self.csv_file)
-        #df = df[df["split"] == split]
-
-        #print(f"CSV file: {csv_file}")
-        #print(f"df len: {len(df)}")
         valid_rows = []
 
         for index, row in df.iterrows():
             video_path = os.path.join(self.data_dir, row["video_name"])
+
+            if row["video_name"].startswith('_'):
+                continue
 
             if os.path.exists(video_path) and self.count_frame(video_path) > self.min_frames:
                 valid_rows.append(row)
@@ -69,7 +68,7 @@ class ExposuretDataModule(pl.LightningDataModule):
             self.train_set = ExposureDataset(root=self.data_dir,
                                 data=self.data_train,
                                 label=self.label_train,
-                                augmented=False,
+                                augmented=True,
                                 sampling_strategy=self.sampling_strategy)
             
             self.val_set   = ExposureDataset(root=self.data_dir, 
