@@ -63,18 +63,19 @@ class ExposureDataset(torch.utils.data.Dataset):
 
         if video_name.startswith('_'):
             video_name = video_name.replace("_", "", 1)
-            
+
         #row = self.df.iloc[index].to_dict()
-        path = os.path.join(self.folder, data["video_name"].repla)
+        path = os.path.join(self.folder, video_name)
         #print(f"Load video from: {path}")
 
         # Load video into np.array
-        video = loadvideo(path, self.frame_dim)#.astype(np.float32) / 255.0
+        video = loadvideo(path, self.frame_dim) #(F, H, W, C)
+        #.astype(np.float32) / 255.0
         #key = os.path.splitext(self.fnames[index])[0]
 
-        video = np.moveaxis(video, 0, 1) #(F, C, H, W)
+        # video = np.moveaxis(video, 0, 1) #(F, C, H, W)
 
-        F, C, H, W = video.shape
+        F, H, W, C = video.shape
         #sampling_rate = 1
 
         #if F > 1024:
@@ -101,7 +102,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             video = video[:self.max_frames,:,:,:]
         elif video.shape[0] < self.max_frames:
             #print(f"{row['video_name']}: {video.shape}")
-            pads = np.zeros((self.max_frames - video.shape[0], 3, H, W))
+            pads = np.zeros((self.max_frames - video.shape[0], H, W, C))
 
             #print(f"padding shape: {pads.shape}")
             video = np.concatenate((video, pads), axis=0)
@@ -109,15 +110,10 @@ class ExposureDataset(torch.utils.data.Dataset):
         assert video.shape[0] == self.max_frames
 
         if data["video_name"].startswith('_'):
-            vid = video.transpose((0, 2, 3, 1)) # (F, H, W, C) 
-            vid = np.asarray(self.vid_upsampling(vid)) # (F, H, W, C)
-            video = vid.transpose((0, 3, 1, 2)) # (F, C, H, W)
+            video = np.asarray(self.vid_upsampling(video)) # (F, H, W, C)
 
-        #print(f'before video size: {nvideo.shape}')
         if self.augmented:
-            vid = video.transpose((0, 2, 3, 1)) # (F, H, W, C) 
-            vid = np.asarray(self.vid_augs(vid)) # (F, H, W, C)
-            video = vid.transpose((0, 3, 1, 2)) # (F, C, H, W)
+            video = np.asarray(self.vid_augs(video)) # (F, H, W, C)
         
         #saved_video = nvideo.transpose((0, 2, 3, 1))
         #print(f'after video size: {saved_video.shape}: {filename}')
@@ -134,6 +130,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             label["fear"]
         ]).astype(np.float32)
 
+        video = video.transpose((0, 3, 1, 2)) # (F, C, H, W)
         video = video.astype(np.float32) / 255.0
         
         return {'video': video, 'label': label}
@@ -180,11 +177,11 @@ def loadvideo(filename: str, frame_dim):
         count += 1
 
     # capture.release()
-    v = v.transpose((3, 0, 1, 2)) #(C, F, H, W)
+    #v = v.transpose((3, 0, 1, 2)) #(C, F, H, W)
 
     assert v.size > 0
 
-    return v
+    return v # (F, W, H, C)
 
 def count_frame(filename: str):
     if not os.path.exists(filename):
