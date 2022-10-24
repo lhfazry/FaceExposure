@@ -75,7 +75,7 @@ class ExposuretDataModule(pl.LightningDataModule):
         X = X.drop(X_min.index)
         y = y.drop(y_min.index)
 
-        for _ in range(3):
+        for _ in range(9):
             X = X.append(X_min, ignore_index = True)
             y = y.append(y_min, ignore_index = True)
 
