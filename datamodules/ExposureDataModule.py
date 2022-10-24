@@ -71,7 +71,7 @@ class ExposuretDataModule(pl.LightningDataModule):
         y = pd.DataFrame(label_train)
 
         X_min, y_min = get_minority_instace(X, y)
-        X_min['video_name'] = X_min['video_name'].apply(self.mark_column)
+        X_min['video_name'] = X_min['video_name'].apply(lambda x : f"_{x}")
         #X = X.drop(X_min.index)
         #y = y.drop(y_min.index)
 
@@ -81,9 +81,6 @@ class ExposuretDataModule(pl.LightningDataModule):
 
         return X.to_numpy(), y.to_numpy()
             
-    def mark_column(self, video_name):
-        return f"_{video_name}"
-        
     def setup(self, stage = None):
         print(f'setup: {self.data_dir}')
 
