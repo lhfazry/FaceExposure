@@ -13,6 +13,7 @@ parser.add_argument("--batch_size", type=int, default=8, help="Batch size")
 #parser.add_argument("--embed_dim", type=int, default=128, help="Embed dimension")
 parser.add_argument("--frozen_stages", type=int, default=-1 , help="Frozen stages")
 parser.add_argument("--ckpt_path", type=str, default=None, help="Checkpoint path")
+parser.add_argument("--upsampling", type=int, default=0, help="Upsampling")
 parser.add_argument("--max_epochs", type=int, default=100, help="Max epochs")
 parser.add_argument("--num_workers", type=int, default=8, help="num_workers")
 parser.add_argument("--accelerator", type=str, default='cpu', help="Accelerator")
@@ -31,17 +32,16 @@ if __name__ == '__main__':
     data_dir = params.data_dir
     pretrained = params.pretrained
     batch_size = params.batch_size
-    #embed_dim = params.embed_dim
     frozen_stages = params.frozen_stages
     ckpt_path = params.ckpt_path
     max_epochs = params.max_epochs
     num_workers = params.num_workers
+    upsampling = params.upsampling
     accelerator = params.accelerator
     dataset_mode = params.dataset_mode
     csv_file = params.csv_file
     sampling_strategy = params.sampling_strategy
     logs_dir = params.logs_dir
-    multi_stage_training = params.multi_stage_training
     log = params.log
     variant = params.variant
 
@@ -51,6 +51,7 @@ if __name__ == '__main__':
                         batch_size=batch_size, 
                         num_workers=num_workers, 
                         dataset_mode=dataset_mode,
+                        upsampling=upsampling,
                         sampling_strategy=sampling_strategy, 
                         csv_file=csv_file)
 
@@ -63,15 +64,16 @@ if __name__ == '__main__':
         num_heads = [4, 8, 16, 32]
         embed_dim = 128 
 
-    exposure = Exposure(pretrained, 
-                    embed_dim=embed_dim, 
-                    depths=depths, 
-                    num_heads=num_heads, 
-                    frozen_stages=frozen_stages, 
-                    batch_size=batch_size, 
-                    multi_stage_training=multi_stage_training)
+    exposure = Exposure(
+                pretrained, 
+                embed_dim=embed_dim, 
+                depths=depths, 
+                num_heads=num_heads, 
+                frozen_stages=frozen_stages, 
+                batch_size=batch_size)
 
-    trainer = pl.Trainer(accelerator=accelerator, 
+    trainer = pl.Trainer(
+                accelerator=accelerator, 
                 max_epochs=max_epochs, 
                 num_sanity_val_steps=1, 
                 auto_scale_batch_size=True, 

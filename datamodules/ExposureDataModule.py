@@ -13,6 +13,7 @@ class ExposuretDataModule(pl.LightningDataModule):
             num_workers: int = 8, 
             dataset_mode: str = 'repeat',
             sampling_strategy: str = 'truncate',
+            upsampling: int = 0,
             min_frames = 80, 
             max_frames = 512,
             csv_file: str = 'datasets/video_exposure.csv'):
@@ -24,6 +25,7 @@ class ExposuretDataModule(pl.LightningDataModule):
         self.dataset_mode = dataset_mode
         self.csv_file = csv_file
         self.sampling_strategy = sampling_strategy
+        self.upsampling = upsampling
         self.max_frames = max_frames
         self.min_frames = min_frames
 
