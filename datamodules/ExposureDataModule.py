@@ -64,7 +64,7 @@ class ExposuretDataModule(pl.LightningDataModule):
         self.data_test, self.label_test = data_test, label_test
 
         if self.upsampling == 1:
-            data_train, label_train = self.upsample_data(self.data_train, self.label_train)
+            self.data_train, self.label_train = self.upsample_data(self.data_train, self.label_train)
 
     def upsample_data(self, data_train, label_train):
         X = pd.DataFrame(data_train)
