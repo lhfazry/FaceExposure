@@ -6,6 +6,7 @@ from torch.utils.data import random_split, DataLoader
 from torchvision import transforms
 from datasets.ExposureDataset import ExposureDataset
 from skmultilearn.model_selection import iterative_train_test_split
+from utils.mlsmote import get_minority_instace
 
 class ExposuretDataModule(pl.LightningDataModule):
     def __init__(self, data_dir: str = "datasets/Exposure", 
@@ -14,7 +15,7 @@ class ExposuretDataModule(pl.LightningDataModule):
             dataset_mode: str = 'repeat',
             sampling_strategy: str = 'truncate',
             upsampling: int = 0,
-            min_frames = 80, 
+            min_frames = 80,
             max_frames = 512,
             csv_file: str = 'datasets/video_exposure.csv'):
         super().__init__()
@@ -62,6 +63,24 @@ class ExposuretDataModule(pl.LightningDataModule):
         self.data_val, self.label_val = data_val, label_val
         self.data_test, self.label_test = data_test, label_test
 
+        if self.upsampling:
+            data_train, label_train = self.upsampling(self.data_train, self.label_train)
+
+    def upsampling(data_train, label_train):
+        X = pd.DataFrame(data_train)
+        y = pd.DataFrame(label_train)
+
+        X_min, y_min = get_minority_instace(X, y)
+
+        X = X.drop(X_min.index)
+        y = y.drop(y_min.index)
+
+        for _ in range(3):
+            X = X.append(X_min, ignore_index = True)
+            y = y.append(y_min, ignore_index = True)
+
+        return X.to_numpy(), y.to_numpy()
+            
     def setup(self, stage = None):
         print(f'setup: {self.data_dir}')
 
