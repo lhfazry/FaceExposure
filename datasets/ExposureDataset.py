@@ -34,12 +34,20 @@ class ExposureDataset(torch.utils.data.Dataset):
         if not os.path.exists(root):
             raise ValueError("Path does not exist: " + root)
 
+        self.vid_upsampling = va.OneOf([
+            va.Salt(), 
+            va.Pepper(),
+            va.RandomShear(x=0.2, y=0.2),
+            va.Multiply(random.random()),
+            va.Add(random.randint(20, 50))
+        ])
+
         self.vid_augs = va.Sequential([
             #va.RandomCrop(size=(240, 180)), # randomly crop video with a size of (240 x 180)
             va.RandomRotate(degrees=10), # randomly rotates the video with a degree randomly choosen from [-10, 10]  
             va.HorizontalFlip(), # horizontally flip the video with 50% probability
             va.VerticalFlip(),
-            va.GaussianBlur(random.random())
+            va.GaussianBlur(random.random()),
         ])
 
         self.data_df = pd.DataFrame(data, columns=["video_name"])
@@ -50,8 +58,14 @@ class ExposureDataset(torch.utils.data.Dataset):
     def __getitem__(self, index):
         data = self.data_df.iloc[index].to_dict()
         label = self.label_df.iloc[index].to_dict()
+
+        video_name = data["video_name"]
+
+        if video_name.startswith('_'):
+            video_name = video_name.replace("_", "", 1)
+            
         #row = self.df.iloc[index].to_dict()
-        path = os.path.join(self.folder, data["video_name"])
+        path = os.path.join(self.folder, data["video_name"].repla)
         #print(f"Load video from: {path}")
 
         # Load video into np.array
@@ -94,10 +108,13 @@ class ExposureDataset(torch.utils.data.Dataset):
 
         assert video.shape[0] == self.max_frames
 
+        if data["video_name"].startswith('_'):
+            vid = video.transpose((0, 2, 3, 1)) # (F, H, W, C) 
+            vid = np.asarray(self.vid_upsampling(vid)) # (F, H, W, C)
+            video = vid.transpose((0, 3, 1, 2)) # (F, C, H, W)
+
         #print(f'before video size: {nvideo.shape}')
         if self.augmented:
-            # (3, 0, 1, 2) ==> (0, 1, 2, 3)
-            # (F, C, H, W)
             vid = video.transpose((0, 2, 3, 1)) # (F, H, W, C) 
             vid = np.asarray(self.vid_augs(vid)) # (F, H, W, C)
             video = vid.transpose((0, 3, 1, 2)) # (F, C, H, W)
