@@ -11,4 +11,4 @@ CUDA_VISIBLE_DEVICES=$CUDA_ID python main.py \
     --max_epoch=15 \
     --upsampling=1 \
     --sampling_strategy=truncate \
-    --csv_file=datasets/video_exposure.csv
+    --csv_file=datasets/video_exposure_nonetral.csv
