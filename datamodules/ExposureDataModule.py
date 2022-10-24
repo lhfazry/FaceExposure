@@ -67,11 +67,10 @@ class ExposuretDataModule(pl.LightningDataModule):
             self.data_train, self.label_train = self.upsample_data(self.data_train, self.label_train)
 
     def upsample_data(self, data_train, label_train):
-        X = pd.DataFrame(data_train)
-        y = pd.DataFrame(label_train)
+        X = pd.DataFrame(data_train, columns=["video_name"])
+        y = pd.DataFrame(label_train, columns=["neutral", "happy", "sad", "contempt", "anger", "disgust", "surprised", "fear"])
 
         X_min, y_min = get_minority_instace(X, y)
-        print(X_min)
         X_min['video_name'] = X_min['video_name'].apply(lambda x : f"_{x}")
         #X = X.drop(X_min.index)
         #y = y.drop(y_min.index)
