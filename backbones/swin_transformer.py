@@ -575,7 +575,7 @@ class SwinTransformer3D(nn.Module):
                 debugging infomation.
         """
         checkpoint = torch.load(self.pretrained, map_location='cpu')
-        state_dict = checkpoint['state_dict']
+        state_dict = checkpoint['state_dict'] #checkpoint['model']
 
         # delete relative_position_index since we always re-init it
         relative_position_index_keys = [k for k in state_dict.keys() if "relative_position_index" in k]
