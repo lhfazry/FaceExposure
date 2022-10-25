@@ -40,7 +40,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             va.VerticalFlip(),
         ])
 
-        self.vid_augs = va.Sequential([
+        self.vid_augs = va.OneOf([
             #va.RandomCrop(size=(240, 180)), # randomly crop video with a size of (240 x 180)
             va.Salt(), 
             va.Pepper(),
