@@ -575,7 +575,7 @@ class SwinTransformer3D(nn.Module):
                 debugging infomation.
         """
         checkpoint = torch.load(self.pretrained, map_location='cpu')
-        state_dict = checkpoint['state_dict'] #checkpoint['model']
+        state_dict = checkpoint['model']
 
         # delete relative_position_index since we always re-init it
         relative_position_index_keys = [k for k in state_dict.keys() if "relative_position_index" in k]
@@ -646,7 +646,7 @@ class SwinTransformer3D(nn.Module):
             else:
                 # Directly load 3D model.
                 #load_checkpoint(self, self.pretrained, strict=False, logger=logger)
-                self.load_state_dict(torch.load(self.pretrained))
+                self.load_state_dict(torch.load(self.pretrained)['state_dict'])
                 print(f'Weight successfully load from {self.pretrained}')
         elif self.pretrained is None:
             self.apply(_init_weights)
