@@ -82,8 +82,8 @@ class ExposuretDataModule(pl.LightningDataModule):
         X_tmp = pd.concat([X_min for _ in range(9)], ignore_index=True)
         y_tmp = pd.concat([y_min for _ in range(9)], ignore_index=True)
 
-        X.append(X_tmp, ignore_index = True)
-        y.append(y_tmp, ignore_index = True)
+        X = X.append(X_tmp, ignore_index = True)
+        y = y.append(y_tmp, ignore_index = True)
 
         return X.to_numpy(), y.to_numpy()
             
