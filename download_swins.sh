@@ -11,7 +11,6 @@ LINK="https://github.com/SwinTransformer/storage/releases/download/v1.0.4/swin_s
 #FILE="pretrained/swin_base_patch244_window877_kinetics400_22k.pth"
 #FILE="pretrained/swin_small_patch4_window7_224_22k.pth"
 FILE="pretrained/swin_small_patch244_window877_kinetics400_1k.pth"
-https://github.com/SwinTransformer/storage/releases/download/v1.0.4/swin_small_patch244_window877_kinetics400_1k.pth
 
 mkdir -p pretrained
 curl -L $LINK --output $FILE
