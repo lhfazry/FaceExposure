@@ -77,8 +77,8 @@ if __name__ == '__main__':
                 auto_scale_batch_size=True, 
                 enable_model_summary=True,
                 logger=logger,
-                precision=16,
-                callbacks=[EarlyStopping(monitor="val_loss")])
+                precision=16,)
+                #callbacks=[EarlyStopping(monitor="val_loss")])
 
     if mode == 'train':
         trainer.fit(model=exposure, datamodule=data_module, ckpt_path=ckpt_path)
