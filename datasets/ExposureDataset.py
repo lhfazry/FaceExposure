@@ -130,7 +130,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             label["fear"]
         ]).astype(np.float32)
 
-        video = video.transpose((3, 0, 1, 2)) # (C, F, H, W)
+        video = video.transpose((0, 3, 1, 2)) # (F, C, H, W)
         video = video.astype(np.float32) / 255.0
         
         return {'video': video, 'label': label}
