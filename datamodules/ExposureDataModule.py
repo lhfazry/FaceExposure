@@ -94,17 +94,20 @@ class ExposuretDataModule(pl.LightningDataModule):
                                 data=self.data_train,
                                 label=self.label_train,
                                 augmented=True,
+                                max_frames=self.max_frames,
                                 sampling_strategy=self.sampling_strategy)
             
             self.val_set   = ExposureDataset(root=self.data_dir, 
                                 data=self.data_val,
                                 label=self.label_val,
+                                max_frames=self.max_frames,
                                 sampling_strategy=self.sampling_strategy)
 
         if stage == "validate" or stage is None:
             self.val_set   = ExposureDataset(root=self.data_dir, 
                                 data=self.data_val,
                                 label=self.label_val,
+                                max_frames=self.max_frames,
                                 sampling_strategy=self.sampling_strategy)
 
         # Assign test dataset for use in dataloader(s)
@@ -112,12 +115,14 @@ class ExposuretDataModule(pl.LightningDataModule):
             self.test_set   = ExposureDataset(root=self.data_dir, 
                                 data=self.data_test,
                                 label=self.label_test,
+                                max_frames=self.max_frames,
                                 sampling_strategy=self.sampling_strategy)
 
         if stage == "predict" or stage is None:
             self.predict_set   = ExposureDataset(root=self.data_dir,
                                 data=self.data_test,
                                 label=self.label_test,
+                                max_frames=self.max_frames,
                                 sampling_strategy=self.sampling_strategy)
 
     def train_dataloader(self):
