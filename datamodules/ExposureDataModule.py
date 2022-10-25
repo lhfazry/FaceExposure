@@ -62,7 +62,9 @@ class ExposuretDataModule(pl.LightningDataModule):
         self.data_test, self.label_test = data_test, label_test
 
         if self.upsampling == 1:
+            print(f"train before upsampling: {len(self.data_train)}")
             self.data_train, self.label_train = self.upsample_data(self.data_train, self.label_train)
+            print(f"train after upsampling: {len(self.data_train)}")
 
     def upsample_data(self, data_train, label_train):
         X = pd.DataFrame(data_train, columns=["video_name"])

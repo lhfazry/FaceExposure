@@ -155,8 +155,8 @@ class Exposure(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         prediction_label = self(batch['video'])
         print(f"pred: {prediction_label}")
-        print(f"label: {batch['label']}")
-        
+        #print(f"label: {batch['label']}")
+
         loss = self.loss_fn(prediction_label, batch['label'])
         acc = self.accuracy((prediction_label.sigmoid() > 0.5).long(), batch['label'])
 
