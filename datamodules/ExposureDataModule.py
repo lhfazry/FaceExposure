@@ -15,7 +15,7 @@ class ExposuretDataModule(pl.LightningDataModule):
             sampling_strategy: str = 'truncate',
             upsampling: int = 0,
             min_frames = 80,
-            max_frames = 1024,
+            max_frames = 512,
             csv_file: str = 'datasets/video_exposure.csv'):
         super().__init__()
 
