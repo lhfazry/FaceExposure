@@ -44,7 +44,7 @@ class ExposureDataset(torch.utils.data.Dataset):
 
         self.vid_augs = va.Sequential([
             #va.RandomCrop(size=(240, 180)), # randomly crop video with a size of (240 x 180)
-            va.RandomRotate(degrees=10), # randomly rotates the video with a degree randomly choosen from [-10, 10]  
+            va.RandomRotate(degrees=5), # randomly rotates the video with a degree randomly choosen from [-10, 10]  
             va.HorizontalFlip(), # horizontally flip the video with 50% probability
             va.VerticalFlip(),
             va.GaussianBlur(random.random()),
@@ -88,7 +88,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         #sampling_rate = round(F / self.max_frames)
 
         if self.sampling_strategy == "truncate":
-            video = video[:self.max_frames,:,:,:]
+            video = video[:self.max_frames if F > self.max_frames else F,:,:,:]
         elif self.sampling_strategy == "down-sample":
             sampling_rate = round(F / self.max_frames)
             video = video[::1 if sampling_rate == 0 else sampling_rate,:,:,:]
@@ -130,7 +130,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             label["fear"]
         ]).astype(np.float32)
 
-        video = video.transpose((0, 3, 1, 2)) # (F, C, H, W)
+        video = video.transpose((3, 0, 1, 2)) # (C, F, H, W)
         video = video.astype(np.float32) / 255.0
         
         return {'video': video, 'label': label}
