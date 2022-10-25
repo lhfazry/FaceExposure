@@ -12,7 +12,6 @@ class ExposuretDataModule(pl.LightningDataModule):
     def __init__(self, data_dir: str = "datasets/Exposure", 
             batch_size: int = 32, 
             num_workers: int = 8, 
-            dataset_mode: str = 'repeat',
             sampling_strategy: str = 'truncate',
             upsampling: int = 0,
             min_frames = 80,
@@ -23,7 +22,6 @@ class ExposuretDataModule(pl.LightningDataModule):
         self.data_dir = data_dir
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.dataset_mode = dataset_mode
         self.csv_file = csv_file
         self.sampling_strategy = sampling_strategy
         self.upsampling = upsampling
@@ -71,13 +69,19 @@ class ExposuretDataModule(pl.LightningDataModule):
         y = pd.DataFrame(label_train, columns=["neutral", "happy", "sad", "contempt", "anger", "disgust", "surprised", "fear"])
 
         X_min, y_min = get_minority_instace(X, y)
-        X_min['video_name'] = X_min['video_name'].apply(lambda x : f"_{x}")
+        X_min['video_name'].apply(lambda x : f"_{x}")
         #X = X.drop(X_min.index)
         #y = y.drop(y_min.index)
 
-        for _ in range(9):
-            X = X.append(X_min, ignore_index = True)
-            y = y.append(y_min, ignore_index = True)
+        #for _ in range(9):
+        #    X = X.append(X_min, ignore_index = True)
+        #    y = y.append(y_min, ignore_index = True)
+
+        X_tmp = pd.concat([X_min for _ in range(9)], ignore_index=True)
+        y_tmp = pd.concat([y_min for _ in range(9)], ignore_index=True)
+
+        X.append(X_tmp, ignore_index = True)
+        y.append(y_tmp, ignore_index = True)
 
         return X.to_numpy(), y.to_numpy()
             

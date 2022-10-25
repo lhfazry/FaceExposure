@@ -18,7 +18,7 @@ class ExposureDataset(torch.utils.data.Dataset):
     def __init__(self, root, 
             data,
             label,
-            frame_dim=128,
+            frame_dim=64,
             augmented=False, 
             min_frames = 80, 
             max_frames = 512, 

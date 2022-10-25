@@ -214,6 +214,6 @@ class Exposure(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=1e-3, weight_decay=1e-2)
         #optimizer = torch.optim.AdamW(self.parameters())
-        #lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.85, verbose=True)
+        lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1, verbose=True)
 
-        return [optimizer]#, [lr_scheduler]
+        return [optimizer], [lr_scheduler]
