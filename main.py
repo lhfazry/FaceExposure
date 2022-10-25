@@ -49,7 +49,6 @@ if __name__ == '__main__':
     data_module = ExposuretDataModule(data_dir=data_dir, 
                         batch_size=batch_size, 
                         num_workers=num_workers, 
-                        dataset_mode=dataset_mode,
                         upsampling=upsampling,
                         sampling_strategy=sampling_strategy, 
                         csv_file=csv_file)
