@@ -56,7 +56,7 @@ def loadvideo(filename: str, frame_dim):
     return v, fps # (F, W, H, C)
 
 def save_video(name, video, fps):
-    fourcc = cv2.VideoWriter_fourcc(*'MP4V')
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
     data = cv2.VideoWriter(name, fourcc, float(fps), (video.shape[1], video.shape[2]))
 
     for v in video:
