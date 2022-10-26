@@ -37,7 +37,6 @@ class ExposureDataset(torch.utils.data.Dataset):
         self.vid_upsampling = va.OneOf([
             va.Salt(), 
             va.Pepper(),
-            va.RandomShear(x=0.2, y=0.2),
             va.Multiply(random.random()),
             va.Add(random.randint(20, 50))
         ])
@@ -48,6 +47,7 @@ class ExposureDataset(torch.utils.data.Dataset):
             va.HorizontalFlip(), # horizontally flip the video with 50% probability
             va.VerticalFlip(),
             va.GaussianBlur(random.random()),
+            va.RandomShear(x=0.4, y=0.4),
         ])
 
         self.data_df = pd.DataFrame(data, columns=["video_name"])
