@@ -35,18 +35,18 @@ class ExposureDataset(torch.utils.data.Dataset):
             raise ValueError("Path does not exist: " + root)
 
         self.vid_upsampling = va.OneOf([
-            va.RandomRotate(degrees=5), # randomly rotates the video with a degree randomly choosen from [-10, 10]  
-            va.HorizontalFlip(), # horizontally flip the video with 50% probability
-            va.VerticalFlip(),
-        ])
-
-        self.vid_augs = va.OneOf([
-            #va.RandomCrop(size=(240, 180)), # randomly crop video with a size of (240 x 180)
             va.Salt(), 
             va.Pepper(),
             va.RandomShear(x=0.2, y=0.2),
             va.Multiply(random.random()),
-            va.Add(random.randint(20, 50)),
+            va.Add(random.randint(20, 50))
+        ])
+
+        self.vid_augs = va.Sequential([
+            #va.RandomCrop(size=(240, 180)), # randomly crop video with a size of (240 x 180)
+            va.RandomRotate(degrees=5), # randomly rotates the video with a degree randomly choosen from [-10, 10]  
+            va.HorizontalFlip(), # horizontally flip the video with 50% probability
+            va.VerticalFlip(),
             va.GaussianBlur(random.random()),
         ])
 

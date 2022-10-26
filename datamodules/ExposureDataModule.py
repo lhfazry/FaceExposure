@@ -44,10 +44,17 @@ class ExposuretDataModule(pl.LightningDataModule):
                 valid_rows.append(row)
 
         df = pd.DataFrame(valid_rows)
+        data_df = df[["video_name"]]
+        label_df = df[["neutral", "happy", "sad", "contempt", "anger", "disgust", "surprised", "fear"]]
+
+        if self.upsampling == 1:
+            print(f"data before upsampling: {len(df)}")
+            data_df, label_df = self.upsample_data(data_df, label_df, True)
+            print(f"data after upsampling: {len(df)}")
 
         data_train, label_train, data_test, label_test = iterative_train_test_split(
-            df[["video_name"]].values,
-            df[["neutral", "happy", "sad", "contempt", "anger", "disgust", "surprised", "fear"]].values,
+            data_df[["video_name"]].values,
+            label_df[["neutral", "happy", "sad", "contempt", "anger", "disgust", "surprised", "fear"]].values,
             test_size = 0.2
         )
 
@@ -61,14 +68,13 @@ class ExposuretDataModule(pl.LightningDataModule):
         self.data_val, self.label_val = data_val, label_val
         self.data_test, self.label_test = data_test, label_test
 
-        if self.upsampling == 1:
-            print(f"train before upsampling: {len(self.data_train)}")
-            self.data_train, self.label_train = self.upsample_data(self.data_train, self.label_train)
-            print(f"train after upsampling: {len(self.data_train)}")
-
-    def upsample_data(self, data_train, label_train):
-        X = pd.DataFrame(data_train, columns=["video_name"])
-        y = pd.DataFrame(label_train, columns=["neutral", "happy", "sad", "contempt", "anger", "disgust", "surprised", "fear"])
+    def upsample_data(self, data_train, label_train, from_df=False):
+        if not from_df:
+            X = pd.DataFrame(data_train, columns=["video_name"])
+            y = pd.DataFrame(label_train, columns=["neutral", "happy", "sad", "contempt", "anger", "disgust", "surprised", "fear"])
+        else:
+            X = data_train
+            y = label_train
 
         X_min, y_min = get_minority_instace(X, y)
         X_min['video_name'].apply(lambda x : f"_{x}")
@@ -85,7 +91,7 @@ class ExposuretDataModule(pl.LightningDataModule):
         X = X.append(X_tmp, ignore_index = True)
         y = y.append(y_tmp, ignore_index = True)
 
-        return X.to_numpy(), y.to_numpy()
+        return X, y
             
     def setup(self, stage = None):
         print(f'setup: {self.data_dir}')
