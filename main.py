@@ -13,7 +13,9 @@ parser.add_argument("--batch_size", type=int, default=8, help="Batch size")
 parser.add_argument("--frozen_stages", type=int, default=-1 , help="Frozen stages")
 parser.add_argument("--ckpt_path", type=str, default=None, help="Checkpoint path")
 parser.add_argument("--upsampling", type=int, default=0, help="Upsampling")
+parser.add_argument("--max_frames", type=int, default=512, help="Max frames")
 parser.add_argument("--max_epochs", type=int, default=100, help="Max epochs")
+parser.add_argument("--frame_dim", type=int, default=128, help="Frame dimension")
 parser.add_argument("--num_workers", type=int, default=8, help="num_workers")
 parser.add_argument("--accelerator", type=str, default='cpu', help="Accelerator")
 parser.add_argument("--dataset_mode", type=str, default='repeat', help="Dataset Mode")
@@ -34,6 +36,8 @@ if __name__ == '__main__':
     frozen_stages = params.frozen_stages
     ckpt_path = params.ckpt_path
     max_epochs = params.max_epochs
+    max_frames = params.max_frames
+    frame_dim = params.frame_dim
     num_workers = params.num_workers
     upsampling = params.upsampling
     accelerator = params.accelerator
@@ -50,6 +54,8 @@ if __name__ == '__main__':
                         batch_size=batch_size, 
                         num_workers=num_workers, 
                         upsampling=upsampling,
+                        max_frames=max_frames,
+                        frame_dim=frame_dim,
                         sampling_strategy=sampling_strategy, 
                         csv_file=csv_file)
 

@@ -16,6 +16,7 @@ class ExposuretDataModule(pl.LightningDataModule):
             upsampling: int = 0,
             min_frames = 80,
             max_frames = 512,
+            frame_dim = 128,
             csv_file: str = 'datasets/video_exposure.csv'):
         super().__init__()
 
@@ -27,6 +28,7 @@ class ExposuretDataModule(pl.LightningDataModule):
         self.upsampling = upsampling
         self.max_frames = max_frames
         self.min_frames = min_frames
+        self.frame_dim = frame_dim
 
         #self.transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
 
@@ -48,9 +50,9 @@ class ExposuretDataModule(pl.LightningDataModule):
         label_df = df[["neutral", "happy", "sad", "contempt", "anger", "disgust", "surprised", "fear"]]
 
         if self.upsampling == 1:
-            print(f"data before upsampling: {len(df)}")
+            print(f"data before upsampling: {len(data_df)}")
             data_df, label_df = self.upsample_data(data_df, label_df, True)
-            print(f"data after upsampling: {len(df)}")
+            print(f"data after upsampling: {len(data_df)}")
 
         data_train, label_train, data_test, label_test = iterative_train_test_split(
             data_df[["video_name"]].values,
@@ -103,12 +105,14 @@ class ExposuretDataModule(pl.LightningDataModule):
                                 label=self.label_train,
                                 augmented=True,
                                 max_frames=self.max_frames,
+                                frame_dim=self.frame_dim,
                                 sampling_strategy=self.sampling_strategy)
             
             self.val_set   = ExposureDataset(root=self.data_dir, 
                                 data=self.data_val,
                                 label=self.label_val,
                                 max_frames=self.max_frames,
+                                frame_dim=self.frame_dim,
                                 sampling_strategy=self.sampling_strategy)
 
         if stage == "validate" or stage is None:
@@ -116,6 +120,7 @@ class ExposuretDataModule(pl.LightningDataModule):
                                 data=self.data_val,
                                 label=self.label_val,
                                 max_frames=self.max_frames,
+                                frame_dim=self.frame_dim,
                                 sampling_strategy=self.sampling_strategy)
 
         # Assign test dataset for use in dataloader(s)
@@ -124,6 +129,7 @@ class ExposuretDataModule(pl.LightningDataModule):
                                 data=self.data_test,
                                 label=self.label_test,
                                 max_frames=self.max_frames,
+                                frame_dim=self.frame_dim,
                                 sampling_strategy=self.sampling_strategy)
 
         if stage == "predict" or stage is None:
@@ -131,6 +137,7 @@ class ExposuretDataModule(pl.LightningDataModule):
                                 data=self.data_test,
                                 label=self.label_test,
                                 max_frames=self.max_frames,
+                                frame_dim=self.frame_dim,
                                 sampling_strategy=self.sampling_strategy)
 
     def train_dataloader(self):
