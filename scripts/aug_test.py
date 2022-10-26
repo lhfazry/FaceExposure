@@ -61,7 +61,7 @@ def save_video(name, video, fps):
     data = cv2.VideoWriter(name, fourcc, float(fps), (video.shape[1], video.shape[2]))
 
     for v in video:
-        v = cv2.cvtColor(v, cv2.COLOR_RGB2BGR)
+        #v = cv2.cvtColor(v, cv2.COLOR_RGB2BGR)
         data.write(v)
 
     data.release()
