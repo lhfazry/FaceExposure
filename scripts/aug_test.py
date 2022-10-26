@@ -77,7 +77,7 @@ vid_augs = va.Sequential([
     va.GaussianBlur(random.random()),
 ])
 
-for i in range(10):
+for i in range(5):
     path_file = Path(os.path.join(video_dir, files[i]))
     video, fps = loadvideo(os.path.join(video_dir, files[i]), 128)#.astype(np.float32)
     print(f"{files[i]}, video shape: {video.shape}")

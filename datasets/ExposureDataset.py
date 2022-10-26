@@ -44,7 +44,7 @@ class ExposureDataset(torch.utils.data.Dataset):
 
         self.vid_augs = va.Sequential([
             #va.RandomCrop(size=(240, 180)), # randomly crop video with a size of (240 x 180)
-            va.RandomRotate(degrees=5), # randomly rotates the video with a degree randomly choosen from [-10, 10]  
+            va.RandomRotate(degrees=10), # randomly rotates the video with a degree randomly choosen from [-10, 10]  
             va.HorizontalFlip(), # horizontally flip the video with 50% probability
             va.VerticalFlip(),
             va.GaussianBlur(random.random()),
@@ -109,6 +109,9 @@ class ExposureDataset(torch.utils.data.Dataset):
 
         assert video.shape[0] == self.max_frames
 
+        # agar augmentasi bekerja
+        video = video.astype(np.float32)
+
         if data["video_name"].startswith('_'):
             video = np.asarray(self.vid_upsampling(video)) # (F, H, W, C)
 
@@ -131,7 +134,7 @@ class ExposureDataset(torch.utils.data.Dataset):
         ]).astype(np.float32)
 
         video = video.transpose((0, 3, 1, 2)) # (F, C, H, W)
-        video = video.astype(np.float32) / 255.0
+        video = video / 255.0
         
         return {'video': video, 'label': label}
             
