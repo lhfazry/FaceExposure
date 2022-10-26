@@ -82,7 +82,7 @@ vid_augs = va.Sequential([
 ])
 
 for i in range(10):
-    video, fps = loadvideo(os.path.join(video_dir, files[i])).astype(np.float32)
+    video, fps = loadvideo(os.path.join(video_dir, files[i]), 128).astype(np.float32)
     auged = np.asarray(vid_augs(video)).astype(np.uint8)
     save_video(os.path.join(dataset_dir, files[i]), auged, fps)
 
