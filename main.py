@@ -13,6 +13,7 @@ parser.add_argument("--batch_size", type=int, default=8, help="Batch size")
 parser.add_argument("--frozen_stages", type=int, default=-1 , help="Frozen stages")
 parser.add_argument("--ckpt_path", type=str, default=None, help="Checkpoint path")
 parser.add_argument("--upsampling", type=int, default=0, help="Upsampling")
+parser.add_argument("--train_augmentation", type=int, default=0, help="Train Augmentation")
 parser.add_argument("--max_frames", type=int, default=512, help="Max frames")
 parser.add_argument("--max_epochs", type=int, default=100, help="Max epochs")
 parser.add_argument("--frame_dim", type=int, default=128, help="Frame dimension")
@@ -40,6 +41,7 @@ if __name__ == '__main__':
     frame_dim = params.frame_dim
     num_workers = params.num_workers
     upsampling = params.upsampling
+    train_augmentation = params.train_augmentation
     accelerator = params.accelerator
     dataset_mode = params.dataset_mode
     csv_file = params.csv_file
@@ -54,6 +56,7 @@ if __name__ == '__main__':
                         batch_size=batch_size, 
                         num_workers=num_workers, 
                         upsampling=upsampling,
+                        train_augmentation=train_augmentation,
                         max_frames=max_frames,
                         frame_dim=frame_dim,
                         sampling_strategy=sampling_strategy, 

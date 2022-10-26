@@ -14,6 +14,7 @@ class ExposuretDataModule(pl.LightningDataModule):
             num_workers: int = 8, 
             sampling_strategy: str = 'truncate',
             upsampling: int = 0,
+            train_augmentation: int = 0,
             min_frames = 80,
             max_frames = 512,
             frame_dim = 128,
@@ -26,6 +27,7 @@ class ExposuretDataModule(pl.LightningDataModule):
         self.csv_file = csv_file
         self.sampling_strategy = sampling_strategy
         self.upsampling = upsampling
+        self.train_augmentation = train_augmentation
         self.max_frames = max_frames
         self.min_frames = min_frames
         self.frame_dim = frame_dim
@@ -103,7 +105,7 @@ class ExposuretDataModule(pl.LightningDataModule):
             self.train_set = ExposureDataset(root=self.data_dir,
                                 data=self.data_train,
                                 label=self.label_train,
-                                augmented=True,
+                                augmented=self.train_augmentation == 1,
                                 max_frames=self.max_frames,
                                 frame_dim=self.frame_dim,
                                 sampling_strategy=self.sampling_strategy)
