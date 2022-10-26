@@ -7,6 +7,7 @@ import collections
 import numpy as np
 import torch
 import cv2
+from pathlib import Path
 
 
 def loadvideo(filename: str, frame_dim):
@@ -56,7 +57,7 @@ def loadvideo(filename: str, frame_dim):
     return v, fps # (F, W, H, C)
 
 def save_video(name, video, fps):
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    fourcc = cv2.VideoWriter_fourcc(*'MJPG')
     data = cv2.VideoWriter(name, fourcc, float(fps), (video.shape[1], video.shape[2]))
 
     for v in video:
@@ -82,7 +83,8 @@ vid_augs = va.Sequential([
 ])
 
 for i in range(10):
+    path_file = Path(os.path.join(video_dir, files[i]))
     video, fps = loadvideo(os.path.join(video_dir, files[i]), 128)#.astype(np.float32)
     auged = np.asarray(vid_augs(video))#.astype(np.uint8)
-    save_video(os.path.join(dataset_dir, files[i]), auged, fps)
+    save_video(os.path.join(dataset_dir, f"{path_file.stem}.avi"), auged, fps)
 
