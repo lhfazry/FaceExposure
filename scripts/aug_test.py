@@ -70,11 +70,6 @@ dataset_dir = 'datasets'
 video_dir = os.path.join(dataset_dir, 'cropped')
 files = os.listdir(video_dir)
 
-vid_augs1 = va.Sequential([va.RandomRotate(degrees=10)])
-vid_augs2 = va.Sequential([va.HorizontalFlip()]) 
-vid_augs3 = va.Sequential([va.VerticalFlip()])  
-vid_augs4 = va.Sequential([va.GaussianBlur(0.75)])
-
 vid_augs = va.Sequential([
     va.RandomRotate(degrees=5), # randomly rotates the video with a degree randomly choosen from [-10, 10]  
     va.HorizontalFlip(), # horizontally flip the video with 50% probability
@@ -84,9 +79,9 @@ vid_augs = va.Sequential([
 
 for i in range(10):
     path_file = Path(os.path.join(video_dir, files[i]))
-    video, fps = loadvideo(os.path.join(video_dir, files[i]), 128)#.astype(np.float32)
-    print(f"video shape: {video.shape}")
+    video, fps = loadvideo(os.path.join(video_dir, files[i]), 128).astype(np.float32)
+    print(f"{files[i]}, video shape: {video.shape}")
     auged = np.asarray(vid_augs(video)).astype(np.uint8)
-    print(f"auged shape: {auged.shape}")
+    print(f"{files[i]}, auged shape: {auged.shape}")
     save_video(os.path.join(dataset_dir, f"{path_file.stem}.avi"), auged, fps)
 
