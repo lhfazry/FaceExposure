@@ -7,20 +7,66 @@ import collections
 import numpy as np
 import torch
 import cv2
-from datasets.EchoSet import loadvideo
 
+
+def loadvideo(filename: str, frame_dim):
+    """Loads a video from a file.
+
+    Args:
+        filename (str): filename of video
+
+    Returns:
+        A np.ndarray with dimensions (channels=3, frames, height, width). The
+        values will be uint8's ranging from 0 to 255.
+
+    Raises:
+        FileNotFoundError: Could not find `filename`
+        ValueError: An error occurred while reading the video
+    """
+
+    if not os.path.exists(filename):
+        raise FileNotFoundError(filename)
+
+    capture = cv2.VideoCapture(filename)
+
+    frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
+    fps = int(capture.get(cv2.CAP_PROP_FPS))
+    #frame_width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+    #frame_height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    v = np.zeros((frame_count, frame_dim, frame_dim, 3), np.uint8) # (F, W, H, C)
+
+    for count in range(frame_count):
+        ret, frame = capture.read()
+        
+        if not ret:
+            raise ValueError("Failed to load frame #{} of {}.".format(count, filename))
+
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = cv2.resize(frame, (frame_dim, frame_dim))
+        v[count] = frame
+
+        count += 1
+
+    # capture.release()
+    #v = v.transpose((3, 0, 1, 2)) #(C, F, H, W)
+
+    assert v.size > 0
+
+    return v, fps # (F, W, H, C)
 
 def save_video(name, video, fps):
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')
     data = cv2.VideoWriter(name, fourcc, float(fps), (video.shape[1], video.shape[2]))
 
     for v in video:
+        v = cv2.cvtColor(v, cv2.COLOR_RGB2BGR)
         data.write(v)
 
     data.release()
 
-dataset_dir = '/Users/fazry/Downloads/EchoNet'
-video_dir = os.path.join(dataset_dir, 'Videos')
+dataset_dir = 'datasets'
+video_dir = os.path.join(dataset_dir, 'cropped')
 files = os.listdir(video_dir)
 
 vid_augs1 = va.Sequential([va.RandomRotate(degrees=10)])
@@ -28,27 +74,15 @@ vid_augs2 = va.Sequential([va.HorizontalFlip()])
 vid_augs3 = va.Sequential([va.VerticalFlip()])  
 vid_augs4 = va.Sequential([va.GaussianBlur(0.75)])
 
-video1 = loadvideo(os.path.join(video_dir, files[10])).astype(np.float32)
-#print(video1.shape)
-video1 = np.asarray(vid_augs1(video1)).astype(np.uint8)
-#print(video1.shape)
+vid_augs = va.Sequential([
+    va.RandomRotate(degrees=5), # randomly rotates the video with a degree randomly choosen from [-10, 10]  
+    va.HorizontalFlip(), # horizontally flip the video with 50% probability
+    va.VerticalFlip(),
+    va.GaussianBlur(random.random()),
+])
 
-video2 = loadvideo(os.path.join(video_dir, files[11])).astype(np.float32)
-video2 = np.asarray(vid_augs2(video2)).astype(np.uint8)
-
-video3 = loadvideo(os.path.join(video_dir, files[12])).astype(np.float32)
-video3 = np.asarray(vid_augs3(video3)).astype(np.uint8)
-
-video4 = loadvideo(os.path.join(video_dir, files[13])).astype(np.float32) #(C, F, H, W)   
-video4 = video4.transpose((1, 2, 3, 0)) #(F, H, W, C) 
-video4 = np.asarray(vid_augs4(video4)).astype(np.uint8)
-
-
-#save_video(files[10], video1, 50)
-#save_video(files[11], video2, 50)
-#save_video(files[12], video3, 50)
-save_video(files[13], video4, 50)
-
-# Load video into np.array
-#video = loadvideo(path).astype(np.float32)
+for i in range(10):
+    video, fps = loadvideo(os.path.join(video_dir, files[i])).astype(np.float32)
+    auged = np.asarray(vid_augs(video)).astype(np.uint8)
+    save_video(os.path.join(dataset_dir, files[i]), auged, fps)
 
