@@ -67,18 +67,21 @@ if __name__ == '__main__':
         depths = [2, 2, 18, 2]
         num_heads = [3, 6, 12, 24]
         embed_dim = 96
-        patch_size = [4, 4, 4]
+        patch_size = (4, 4, 4)
+        window_size = (2, 7, 7)
     elif variant == 'base': # base
         depths = [2, 2, 18, 2]
         num_heads = [4, 8, 16, 32]
         embed_dim = 128 
-        patch_size = [2, 4, 4]
+        patch_size = (2, 4, 4)
+        window_size = (8, 7, 7)
 
     exposure = Exposure(
                 pretrained, 
                 embed_dim=embed_dim, 
                 depths=depths, 
                 patch_size=patch_size,
+                window_size=window_size,
                 num_heads=num_heads, 
                 frozen_stages=frozen_stages, 
                 batch_size=batch_size)
