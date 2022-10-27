@@ -68,7 +68,7 @@ if __name__ == '__main__':
         num_heads = [3, 6, 12, 24]
         embed_dim = 96
         patch_size = [4, 4, 4]
-    else: # base
+    elif variant == 'base': # base
         depths = [2, 2, 18, 2]
         num_heads = [4, 8, 16, 32]
         embed_dim = 128 
@@ -78,6 +78,7 @@ if __name__ == '__main__':
                 pretrained, 
                 embed_dim=embed_dim, 
                 depths=depths, 
+                patch_size=patch_size,
                 num_heads=num_heads, 
                 frozen_stages=frozen_stages, 
                 batch_size=batch_size)
