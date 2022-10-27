@@ -11,4 +11,6 @@ for k, v in state_dict['state_dict'].items():
     #k = k.replace('attn.proj.bias', 'attn.attn.out_proj.bias')
     new_state_dict[k] = v
 
-torch.save(new_state_dict, 'pretrained/swin_base_patch244_window877_kinetics400_22k_fixed.pth')
+new_dict = OrderedDict()
+new_dict['state_dict'] = new_state_dict
+torch.save(new_dict, 'pretrained/swin_base_patch244_window877_kinetics400_22k_fixed.pth')
