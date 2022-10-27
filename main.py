@@ -1,4 +1,5 @@
 import argparse
+from unittest.mock import patch
 import pytorch_lightning as pl
 from models.Exposure import Exposure
 from datamodules.ExposureDataModule import ExposuretDataModule
@@ -66,10 +67,12 @@ if __name__ == '__main__':
         depths = [2, 2, 18, 2]
         num_heads = [3, 6, 12, 24]
         embed_dim = 96
+        patch_size = [4, 4, 4]
     else: # base
         depths = [2, 2, 18, 2]
         num_heads = [4, 8, 16, 32]
         embed_dim = 128 
+        patch_size = [2, 4, 4]
 
     exposure = Exposure(
                 pretrained, 
