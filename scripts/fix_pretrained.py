@@ -3,7 +3,7 @@ from collections import OrderedDict
 
 new_state_dict = OrderedDict()
 state_dict = torch.load('pretrained/swin_base_patch244_window877_kinetics400_22k.pth')
-for k, v in state_dict.items():
+for k, v in state_dict['state_dict'].items():
     k = k.replace('backbone.', '')   # remove prefix backbone.
     #k = k.replace('attn.qkv.weight', 'attn.attn.in_proj_weight')
     #k = k.replace('attn.qkv.bias', 'attn.attn.in_proj_bias')
