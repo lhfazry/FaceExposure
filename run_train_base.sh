@@ -4,7 +4,7 @@ mkdir -p lightning_logs/exposure
 CUDA_VISIBLE_DEVICES=$CUDA_ID python main.py \
     --data_dir=datasets/cropped \
     --pretrained=pretrained/swin_base_patch244_window877_kinetics400_22k_fixed.pth \
-    --batch_size=4 \
+    --batch_size=2 \
     --num_workers=4 \
     --accelerator=gpu \
     --variant=base \
