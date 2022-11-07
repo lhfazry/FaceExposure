@@ -1,4 +1,5 @@
 import argparse
+import tensorflow
 from unittest.mock import patch
 import pytorch_lightning as pl
 from models.Exposure import Exposure
